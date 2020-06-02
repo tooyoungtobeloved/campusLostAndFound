@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>tween</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      div {
+        text-align: center;
+        border: 1px dashed darkcyan;
+        margin-bottom: 8px;
+      }
+      span {
+        position: absolute;
+        width: 100px;
+        height: 20px;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <button onclick="replay()">replay</button>
+    <button onclick="stopAll()">stop</button>
+    <button onclick="play()">play</button>
+  </body>
+  <script src="./lib/tween.js"></script>
+  <script>
+    function createElements(arr) {
+      let html = "";
+      let css = "";
+      arr.forEach(item => {
+        html += `<div>${item}<span class="${item}">${item}</span></div>`;
+        css += `
+    .${item} {
+      background-color: #${Math.random()
+        .toString(16)
+        .slice(2, 8)};
+    }
+            `;
+      });
+      document.body.innerHTML += html;
+      const style = document.createElement("style");
+      style.innerHTML = css;
+      document.head.appendChild(style);
+      return getEles(arr);
+    }
+    function getEles(arr) {
+      return arr.map(className => ({
+        name: className,
+        ele: document.querySelector(`.${className}`),
+        style: { left: 0 }
+      }));
+    }
+
+    function createTween(eles) {
+      const updates = eles.map(({ ele, style, name }) => {
+        const lastHalf = new TWEEN.Tween(style)
+          .easing(
+            TWEEN.Easing[name]
+              ? TWEEN.Easing[name].Out
+              : TWEEN.Easing.Linear.None
+          )
+          .to({ left: innerWidth - 100 }, 5000);
+        const tw = new TWEEN.Tween(style)
+          .delay(1000)
+          .easing(
+            TWEEN.Easing[name]
+              ? TWEEN.Easing[name].In
+              : TWEEN.Easing.Linear.None
+          )
+          .to({ left: 600 }, 5000)
+          .start()
+          .chain(lastHalf);
+        return () => {
+          ele.style.left = `${style.left}px`;
+          return (isRestart, isStart) => {
+            // 继续
+            if (isStart) {
+              tw.resume();
+              lastHalf.resume();
+            } else {
+              // 停止
+              tw.pause();
+              lastHalf.pause();
+            }
+            // 重来
+            if (isRestart) {
+              tw.stop();
+              lastHalf.stop();
+              style.left = 0;
+              ele.style.left = "0px";
+              tw.start();
+            }
+          };
+        };
+      });
+      return function updater() {
+        const stops = updates.map(f => f());
+        return function stopper(isRestart, isStart) {
+          stops.forEach(stop => stop(isRestart, isStart));
+        };
+      };
+    }
+    const updater = createTween(
+      createElements([
+        "none",
+        ...Object.keys(TWEEN.Easing).filter(key => key !== "Linear")
+      ])
+    );
+    const stopper = (...args) => {
+      updater()(...args);
+    };
+
+    function render() {
+      TWEEN.update();
+      updater();
+      requestAnimationFrame(render);
+    }
+
+    render();
+
+    function replay() {
+      stopper(true, false);
+    }
+
+    function stopAll() {
+      stopper(false, false);
+    }
+
+    function play() {
+      stopper(false, true);
+    }
+  </script>
+</html>

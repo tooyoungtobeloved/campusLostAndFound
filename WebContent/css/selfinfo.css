@@ -1,0 +1,506 @@
+* {
+	padding: 0;
+	margin: 0;
+} 
+input {
+	background-color: #fff;
+}
+
+body {
+	background-color: #fff9c4;
+	overflow-x: scroll;
+	/* background: url("images/back4.jpg"); */
+	color: rgba(0, 0, 0, 0.8);
+	width: 100%;
+	/* height: 1080px; */
+	font-family: "宋体";
+}
+
+h1 {
+	display: block;
+	margin-bottom: 20px;
+	padding-left: 20px;
+	color: rgba(0, 0, 0, 0.7);
+}
+
+h3 {
+	font-size: 30px;
+	margin: 20px;
+}
+
+label {
+	display: block;
+}
+
+/*导航*/
+.lnav{
+	
+	margin-top: 10px;
+	height: 50px;
+	line-height: 50px;
+	margin-right: 250px;
+	
+}
+.lnav ul li{
+	float: right;
+	font-size: 15px;
+	list-style: none;
+}
+.lnav ul li a{
+	text-decoration: none;
+	color: #152b3c;
+	padding:15px 30px;
+}
+.lnav ul li a:hover{
+	border: 1px solid white;
+	border-radius:5%;
+	color:black;
+}
+.butt {
+	position: absolute;
+	display: inline-block;
+	text-align: center;
+	background-color: #fff9c4;
+	border-radius: 10px;
+	border: 0px;
+	cursor: pointer;
+	height: 50px;
+	width: 130px;
+}
+
+.userImage {
+	position: absolute;
+	top: 95px;
+	left: 120px;
+	float: left;
+	width: 140px;
+	height: 140px;
+	border-radius: 140px;
+}
+
+/* banner */
+.uinfo {
+	
+	position: absolute;
+	right: 270px;
+	top: 80px;
+	width: 1344px;
+	height: 100px;
+	border-radius: 10px 10px 0 0;
+	font-size: 24px;
+	line-height: 100px;
+	background-color: #fffde7;
+}
+
+/* 个人信息大盒子 */
+.selftotal {
+	box-sizing: content-box;
+	width: 1344px;
+	height: 720px;
+	position: absolute;
+	right: 270px;
+	top: 180px;
+	background-color: white;
+	border-radius: 0 0 20px 20px;
+	padding-top: 10px;
+	line-height: 50px;
+	font-size: 26px;
+}
+
+#headN {
+	position: absolute;
+	width: 200px;
+	height: 30px;
+	top: 300px;
+	left: 93px;
+	line-height: 30px;
+	text-align: center;
+}
+
+/* 修改信息 */
+.modify {
+	width: 140px;
+	height: 50px;
+	z-index: 2;
+}
+
+/* 修改信息与密码弹出的盒子 */
+#modifydiv {
+	box-sizing: content-box;
+	padding-top: 20px;
+	display: none;
+	position: fixed;
+	width: 700px;
+	height: 700px;
+	background-color: #fffde7;
+	border-radius: 10px;
+	line-height: 30px;
+	z-index: 5;
+	float: left;
+	padding-left: 30px;
+	padding-top: 30px;
+	font-size: right;
+}
+
+/* 修改资料盒子 */
+#moddata {
+	box-sizing: content-box;
+	width: 90%;
+	height: 100%;
+	padding-left: 30px;
+	padding-top: 30px;
+	font-size: right;
+	z-index: 1;
+}
+
+/* 修改密码详情页 */
+#modpwd {
+	position: relative;
+    width: 100%;
+    height: 90%;
+    padding-left: 0px;
+    padding-top: 0px;
+    font-size: right;
+    padding-right: 100px;
+   	display: none;
+    line-height: 60px;
+    font-size: 18px;
+}
+.check {
+	display :inline-block;
+}
+
+#em {
+	display: inline-block;
+    position: relative;
+    width: 100px;
+    text-align: right;
+    margin-right: -12px;
+    bottom: 126px;
+    font-style: normal;
+}
+
+/* 修改密码 */
+.pwdscope {
+	top: 20px;
+	text-align: right;
+	margin-top: 40px;
+	margin-right: -10px;
+	width: 87%;
+	height: 90%;
+}
+
+/* 修改资料、密码按钮 */
+#modifydata {
+	position: relative;
+	top: 285px;
+	left: 200px;
+	line-height: 50px;
+	float:left;
+	margin-left: -95px;
+}
+
+#modifypwd {
+	position: relative;
+	top: 285px;
+	left: 260px;
+	line-height: 50px;
+}
+#modifypwd:hover,#modifydata:hover,.btn:hover,.glyphicon:hover{
+	background: #fcf091;
+	cursor: pointer;
+	color: black;
+}
+#close1 {
+	cursor: pointer;
+	display: block;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	width: 30px;
+	height: 30px;
+	background-color: rgba(255, 255, 255, 0);
+	/* border: 2px solid black; */
+}
+
+
+/* 文本框样式 */
+.text {
+	box-sizing: border-box;
+	line-height: 1.3;
+	background-color: #fff;
+	border-radius: 2px;
+	padding-left: 10px;
+	border: 1px solid #e6e6e6;
+	height: 50px;
+	width: 340px;
+	text-align: left;
+}
+
+#moduDesc {
+	width: 342px;
+    position: relative;
+    height: 102px;
+    bottom: 40px;
+}
+
+/* 修改资料小盒子 */
+.moddetail {
+	width: 550px;
+	height: 300px;
+	position: absolute;
+	top: 170px;
+	right: 130px;
+	line-height: 45px;
+	text-align: right;
+}
+
+#modheadbut {
+	position: absolute;
+	display: block;
+	opacity: 0;
+	width: 10px;
+	height: 10px;
+	bottom: 20px;
+	left: 230px;
+}
+#uploadHead {
+	width: 150px;
+	height: 50%;
+	position: relative;
+	bottom: -3px;
+	left: 200px;
+	z-index: 2;
+}
+
+
+#modifyhead {
+	opacity: 0;
+	position: absolute;
+	top: 95px;
+	left: 120px;
+	float: left;
+	width: 140px;
+	height: 140px;
+	border-radius: 140px;
+	line-height: 140px;
+	text-align: center;
+}
+
+.newheaddiv {
+	position: relative;
+	left: 30%;
+    top: 0;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 40px;
+}
+#showHead {
+	width: 200px;
+    height: 200px;
+    border-radius: 200px;
+}
+
+#modifyhead:hover {
+	font-size: 20px;
+	color: black;
+	opacity: 0.6;
+	 opacity: 0.6;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.butt:hover {
+	border-radius: 8px;
+	background: #fcf091;
+	cursor: pointer;
+	color: black;
+}
+
+/* 个人信息 */
+#selftext {
+	width: 70%;
+	height: 78%;
+	position: absolute;
+	right: 2%;
+	top: 10%;
+	line-height: 50px;
+	color: rgba(0, 0, 0, 0.8);
+	background-color: rgba(0, 0, 0, 0);
+}
+
+.udescr {
+	position: absolute;
+    text-indent: 33px;
+    padding: 15px;
+    width: 500px;
+    top: 240px;
+    left: -52px;
+    border-radius: 5px;
+}
+#udescr{
+	line-height: 60px;
+	width: 780px;
+	padding:20px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    height: 230px;
+    top: 90px;
+    font-size: 20px;
+    left: 46px;
+    position: absolute;
+}
+
+/* 修改密码与资料的确认与取消按钮 */
+#confirmdata {
+	bottom: 40px;
+	left: 80px;
+}
+
+#close2 {
+	bottom: 40px;
+	right: 100px;
+}
+
+#close3 {
+	bottom: 30px;
+	right: 60px;
+}
+
+#confirmpwd {
+	bottom: 30px;
+	left: 60px;
+}
+
+.butt1 {
+	bottom: 90px;
+}
+
+.butt2 {
+	bottom: 1000px;
+}
+
+/* 我的发布 */
+h1 {
+	display: block;
+	margin-bottom: 20px;
+	padding-left: 20px;
+	color: rgba(0, 0, 0, 0.7);
+}
+
+/* 个人事件 */
+.mypub {
+	position: absolute;
+	right: 270px;
+	top: 900px;
+	width: 1344px;
+	height: 100px;
+	border-radius: 10px 10px 0 0;
+	font-size: 44px;
+	line-height: 100px;
+	background-color: #fffde7;
+}
+
+#selfevent {
+	box-sizing: content-box;
+	position: absolute;
+	right: 270px;
+	top: 990px;
+	width: 1344px;
+	height: 680px;
+	border-radius: 0 0 20px 20px;
+	/* background-color:#fffde7; */
+	padding-top: 10px;
+}
+
+.events {
+	margin-bottom: 10px;
+	padding-top: 40px;
+	height: 190px;
+	background-color: #fff;
+	border-radius: 5px;
+}
+
+.pubcontent {
+	position: absolute;
+	width: 90%;
+	height: 150px;
+	left: 50px;
+}
+
+#pubimg {
+	cursor: pointer;
+	position: absolute;
+	left: 13px;
+	top: -8px;
+	width: 14%;
+	height: 83%;
+	-moz-transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	-o-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+#pubimg:hover {
+	-moz-transform: scale(3.5);
+	-webkit-transform: scale(3.5);
+	-o-transform: scale(3.5);
+	transform: scale(3.5);
+	z-index: 2;
+}
+
+.etopic {
+	position: absolute;
+	top: 1px;
+	left: 230px;
+	width: 60%;
+	height: 83%;
+	font-size: 40px;
+	font-weight: 900;
+	line-height: 120px;
+	text-align: center;
+}
+
+#etopicup {
+	z-index: 2;
+	cursor: pointer;
+}
+
+#etopicup:hover {
+	box-shadow: #fcf091;
+}
+
+.estate {
+	position: absolute;
+	top: 30px;
+	right: 70px;
+	width: 15%;
+	height: 43%;
+	font-size: 30px;
+	line-height: 58px;
+	text-align: center;
+}
+
+.eaddition {
+	position: absolute;
+	bottom: 15px;
+	right: -45px;
+	width: 23%;
+	height: 25%;
+	text-align: left;
+}
+.footer{
+	width: 1000px;
+	margin:60px auto;
+}
+.footer ul{
+	margin-left: 100px;
+}
+.footer ul li{
+	float: left;
+ 
+}
+.footer ul li a{
+	text-decoration: none;
+	color: black;
+	border-left: 2px solid black;
+	padding:0 10px;
+}

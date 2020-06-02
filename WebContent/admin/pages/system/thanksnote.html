@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>文章列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../css/okadmin.css">
+    <style>
+        .layui-table-page {
+            text-align: center !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ok-body">
+        <!--面包屑导航区域-->
+        <div class="ok-body-breadcrumb">
+            <span class="layui-breadcrumb">
+                <a><cite>首页</cite></a>
+                <a><cite>系统</cite></a>
+                <a><cite>感谢信管理</cite></a>
+            </span>
+            <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
+                <i class="layui-icon layui-icon-refresh"></i>
+            </a>
+        </div>
+        <!--模糊搜索区域-->
+        <!--数据表格-->
+        <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+    </div>
+    <!--js逻辑-->
+    <script src="../../lib/layui/layui.js"></script>
+    <script>
+        layui.use(["element", "table", "form", "laydate", "okLayer", "okUtils", "jquery"], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var util = layui.util;
+            var laydate = layui.laydate;
+            var okLayer = layui.okLayer;
+            var okUtils = layui.okUtils;
+            var flag = true;
+            var $ = layui.$;
+            util.fixbar({});
+
+            // laydate.render({elem: "#startTime", type: "datetime"});
+            // laydate.render({elem: "#endTime", type: "datetime"});
+
+            var articleTable = table.render({
+                elem: "#tableId",
+                // url: okUtils.mockApi.article.list,
+                url: "/lostandfound/ThanksNote?method=get",
+                limit: 10,
+                page: true,
+                even: true,
+                // toolbar: "#toolbarTpl",
+                // size: "sm",
+                cellMinWidth: 80,
+                cols: [[
+                    // { type: "checkbox" },
+                    { field: "tId", title: "感谢信ID", sort: true, align: "center" },
+                    { field: "tTitle", title: "标题", align: "center" },
+                    { field: "tDetail", title: "内容", align: "center" },
+                    { field: "tDate", title: "时间", align: "center" },
+                    // { field: "isTop", title: "状态", align: "center", templet: "#isTop" },
+                    { title: "操作", width: 200, align: "center", templet: "#operationTpl" }
+
+                ]],
+                done: function (res, curr, count) {
+                    // console.log(res, curr, count)
+                    if (flag) {
+                        layer.msg("共查询到" + count + "条数据, 当前第" + curr + "页")
+                        flag = false;
+                    }
+                },
+                parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+                    // console.log(res)
+                    return {
+                        "code": res.code, //解析接口状态
+                        //"msg": res.message, //解析提示文本
+                        "count": res.total, //解析数据长度
+                        "data": res.result //解析数据列表
+                        // res:res.result,
+
+                    }
+                }
+            });
+
+            // table.on("toolbar(tableFilter)", function (obj) {
+            //     switch (obj.event) {
+            //         case "batchEnabled":
+            //             batchEnabled();
+            //             break;
+            //         case "batchDisabled":
+            //             batchDisabled();
+            //             break;
+            //         case "batchDel":
+            //             batchDel();
+            //             break;
+            //         case "add":
+            //             add();
+            //             break;
+            //     }
+            // });
+
+            // table.on('row(tableFilter)', function (obj) {
+            //     console.log(obj)
+            //     var data = obj.data;
+            //     okLayer.open("添加文章", "article-add.html?id" + data.eId, "90%", "90%", null, function () {
+            //         console.log(data.eId)
+            //         // articleTable.reload();
+            //     })
+            //     //标注选中样式
+            //     obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+            // });
+
+            table.on("tool(tableFilter)", function (obj) {
+                var data = obj.data;
+                console.log(data)
+                switch (obj.event) {
+                    case "edit":
+                        edit(data.tId);
+                        break;
+                    case "del":
+                        del(data.tId);
+                        break;
+                }
+            });
+
+            function batchEnabled() {
+                okLayer.confirm("确定要批量上架吗？", function (index) {
+                    layer.close(index);
+                    var idsStr = okUtils.table.batchCheck(table);
+                    if (idsStr) {
+                        okUtils.ajax("/article/batchNormal", "post", { idsStr: idsStr }).done(function (response) {
+                            console.log(response)
+                            okUtils.table.successMsg("批量上架成功");
+                        }).fail(function (error) {
+                            console.log(error)
+                        });
+                    }
+                });
+            }
+
+            function batchDisabled() {
+                okLayer.confirm("确定要批量下架吗？", function (index) {
+                    layer.close(index);
+                    var idsStr = okUtils.table.batchCheck(table);
+                    if (idsStr) {
+                        okUtils.ajax("/article/batchStop", "post", { idsStr: idsStr }).done(function (response) {
+                            console.log(response)
+                            okUtils.table.successMsg("批量下架成功");
+                        }).fail(function (error) {
+                            console.log(error)
+                        });
+                    }
+                });
+            }
+
+            function batchDel() {
+                okLayer.confirm("确定要批量删除吗？", function (index) {
+                    layer.close(index);
+                    var idsStr = okUtils.table.batchCheck(table);
+                    if (idsStr) {
+                        okUtils.ajax("/article/batchDel", "post", { idsStr: idsStr }).done(function (response) {
+                            console.log(response)
+                            okUtils.table.successMsg("批量删除成功");
+                        }).fail(function (error) {
+                            console.log(error)
+                        });
+                    }
+                });
+            }
+
+            function add() {
+                okLayer.open("添加文章", "article-add.html", "90%", "90%", null, function () {
+                    articleTable.reload();
+                })
+            }
+
+            // function edit(id) {
+            //     okLayer.open("编辑文章", "article-edit.html?id=" + id, "90%", "90%", null, function () {
+            //         articleTable.reload();
+            //     })
+            // }
+
+            function del(id) {
+                okLayer.confirm("确定要删除吗？", function () {
+                    okUtils.ajax("/lostandfound/ThanksNote", "get", { "method": "delete", "tId": id }).done(function (response) {
+                        console.log(response)
+                        okUtils.table.successMsg("删除成功");
+                    }).fail(function (error) {
+                        console.log(error)
+                    });
+                })
+            }
+            form.on('switch(textify)', function (data) {
+                var checked = data.elem.checked;
+                var noteId = data.elem.name
+                console.log(data.elem.name); //得到checkbox原始DOM对象
+                console.log(data.elem.checked); //开关是否开启，true或者false
+                console.log(data.value); //开关value值，也可以通过data.elem.value得到
+                console.log(data.othis); //得到美化后的DOM对象
+                if (checked) {
+                    $.ajax({
+                        type: "post",
+                        url: "/lostandfound/Notices",
+                        data: { "method": "change", "noteId": noteId },
+                        dataType: "html",
+                        success: function (response) {
+                            if (response === "success") {
+                                okUtils.table.successMsg("置顶成功");
+                                data.elem.disabled = "disabled"
+                                table.reload('tableId', {
+                                    url: '/lostandfound/Notices?method=get'
+                                    , where: {} //设定异步数据接口的额外参数
+                                    //,height: 300
+                                });
+                            } else {
+                                layer.msg("置顶失败")
+                            }
+                        }
+                    });
+
+                }
+            });
+        })
+    </script>
+    <!-- 头工具栏模板 -->
+    <!-- <script type="text/html" id="toolbarTpl">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="batchEnabled"><i class="iconfont icon-shangsheng"></i>批量上架</button>
+        <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="batchDisabled"><i class="iconfont icon-web-icon-"></i>批量下架</button>
+        <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="batchDel"><i class="layui-icon layui-icon-delete"></i>批量删除</button>
+        <button class="layui-btn layui-btn-sm" lay-event="add"><i class="layui-icon">&#xe61f;</i>添加文章</button>
+    </div>
+</script> -->
+    <!-- 链接模板 -->
+    <script type="text/html" id="urlTpl">
+    <a href="{{d.url}}" target="_blank">{{d.url}}</a>
+</script>
+    <!-- 是否指顶模板
+    <input type="checkbox" name="isTop" value="{{d.isTop}}" lay-skin="switch" lay-text="是|否" {{ d.isTop== true ? 'checked' : ''}}>
+-->
+    <script type="text/html" id="topTpl">
+    {{#  if(d.isTop == true){ }}
+        <span class="layui-btn layui-btn-normal layui-btn-xs">已置顶</span>
+    {{#  } else if(d.isTop == false) { }}
+        <span class="layui-btn layui-btn-warm layui-btn-xs">未置顶</span>
+    {{#  } }}
+</script>
+    <!-- 发布状态模板
+    <input type="checkbox" name="top" value="{{d.status}}" lay-skin="switch" lay-text="已发布|未发布" {{ d.status== true ? 'checked' : ''}}>
+-->
+    <script type="text/html" id="statusTpl">
+    {{#  if(d.status == true){ }}
+        <span class="layui-btn layui-btn-normal layui-btn-xs">已发布</span>
+    {{#  } else if(d.status == false) { }}
+        <span class="layui-btn layui-btn-warm layui-btn-xs">未发布</span>
+    {{#  } }}
+</script>
+    <!-- 行工具栏模板 -->
+    <script type="text/html" id="operationTpl">
+    <!-- <a href="javascript:;" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a> -->
+    <a href="javascript:;" title="删除" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
+    </script>
+    <!-- sdsadaasd -->
+    <script type="text/html" id="isTop">
+    {{#  if(d.isTop == 0){ }}
+        <input type="checkbox" name="{{d.noteId}}" lay-skin="switch" lay-filter="textify" lay-text="未置顶|置顶">
+    {{#  } else if(d.isTop == 1) { }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs"  name="{{d.noteId}}">已经置顶</button>
+    {{#  } }}
+</script>
+
+</body>
+
+</html>

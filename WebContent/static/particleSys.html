@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>particleSystem</title>
+    <style>
+      /* canvas {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: linear-gradient(#e4e0ba, #f7d9aa);
+      } */
+    </style>
+  </head>
+  <body></body>
+  <script type="x-shader/x-vertex" id="vertexshader">
+    attribute float size;
+    attribute vec3 position2;
+    uniform float val;
+    void main() {
+        vec3 vPos;
+        vPos.x = position.x * val + position2.x * (1. - val);
+        vPos.y = position.y * val + position2.y * (1. - val);
+        vPos.z = position.z * val + position2.z * (1. - val);
+        vec4 mvPosition = modelViewMatrix * vec4( vPos, 1.0 );
+        gl_PointSize = 4.;
+        gl_Position = projectionMatrix * mvPosition;
+    }
+  </script>
+  <script type="x-shader/x-fragment" id="fragmentshader">
+    uniform vec3 color;
+    uniform sampler2D texture;
+    void main() {
+        gl_FragColor = vec4(color, 1.0);
+        gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
+    }
+  </script>
+
+  <script src="./lib/three.js"></script>
+  <script src="./lib/CSS3DRenderer.js"></script>
+  <script src="./lib/inflate.js"></script>
+  <script src="./lib/tween.js"></script>
+  <script src="./lib/FBXLoader.js"></script>
+  <script src="./lib/orbitcontrol.js"></script>
+  <script>
+    function getTexture(canvasSize = 64) {
+      let canvas = document.createElement("canvas");
+      canvas.width = canvasSize;
+      canvas.height = canvasSize;
+      canvas.style.background = "transparent";
+      let context = canvas.getContext("2d");
+      let gradient = context.createRadialGradient(
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width / 8,
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width / 2
+      );
+      gradient.addColorStop(0, "#fff");
+      gradient.addColorStop(1, "transparent");
+      context.fillStyle = gradient;
+      context.beginPath();
+      context.arc(
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width / 2,
+        0,
+        Math.PI * 2,
+        true
+      );
+      context.fill();
+      let texture = new THREE.Texture(canvas);
+      texture.needsUpdate = true;
+      return texture;
+    }
+    function getTxtData(str) {
+      const c = document.createElement("canvas");
+      c.width = innerHeight;
+      c.height = innerWidth;
+      // document.body.appendChild(c);
+      const t = c.getContext("2d");
+      t.fillStyle = "#f00";
+      t.font = "150px Georgia";
+      t.fillText(str, 100, 100);
+      const { data, width, height } = t.getImageData(
+        0,
+        0,
+        innerHeight,
+        innerWidth
+      );
+      const temp = [];
+      const gap = 3;
+      for (let w = 0; w < width; w += gap) {
+        for (let h = 0; h < height; h += gap) {
+          const index = (h * width + w) * 4;
+          if (data[index] == 255) {
+            temp.push(w / 10, -h / 10, 0);
+          }
+        }
+      }
+      return new Float32Array(temp);
+    }
+    function loader(path) {
+      const objLoader = new THREE.FBXLoader();
+      return new Promise(function(resolve) {
+        objLoader.load(
+          path,
+          object => {
+            resolve(object);
+          },
+          null,
+          e => {
+            console.error(e);
+          }
+        );
+      });
+    }
+    function init() {
+      const scene = new THREE.Scene();
+      // 创建球体模型
+      const ball = new THREE.SphereGeometry(40, 30, 30);
+      // 创建粒子材料
+      const pMaterial = new THREE.PointsMaterial({
+        // 粒子颜色
+        color: 0xff0000,
+        // 粒子大小
+        size: 2
+      });
+      const camera = new THREE.PerspectiveCamera(
+        27,
+        window.innerWidth / window.innerHeight,
+        5,
+        3500
+      );
+      console.log(camera);
+      camera.rotation.x = -0.3;
+      camera.rotation.y = -0.8;
+      camera.rotation.z = -0.2;
+      camera.position.x = -100;
+      // 创建粒子系统
+      const particleSystem = new THREE.Points(ball, pMaterial);
+      // 加入场景
+      // scene.add(particleSystem);
+
+      const hemisphereLight = new THREE.HemisphereLight(
+        0xaaaaaa,
+        0x000000,
+        0.9
+      );
+
+      // 阳光直射
+      const shadowLight = new THREE.DirectionalLight(0xffffff, 0.9);
+
+      shadowLight.position.set(150, 350, 350);
+
+      shadowLight.castShadow = true;
+
+      shadowLight.shadow.camera.left = -400;
+      shadowLight.shadow.camera.right = 400;
+      shadowLight.shadow.camera.top = 400;
+      shadowLight.shadow.camera.bottom = -400;
+      shadowLight.shadow.camera.near = 1;
+      shadowLight.shadow.camera.far = 1000;
+
+      shadowLight.shadow.mapSize.width = 2048;
+      shadowLight.shadow.mapSize.height = 2048;
+
+      // scene.add(hemisphereLight);
+      // scene.add(shadowLight);
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+      loader("./datas/Guitar.FBX")
+        .then(r => {
+          const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+          r.children[0].material = material;
+          const [{ geometry }] = r.children;
+          // const geometry = new THREE.BufferGeometry().fromGeometry(geometry);
+          // const ps = new THREE.Points(
+          //   geometry,
+          //   new THREE.PointsMaterial({
+          //     // 粒子颜色
+          //     color: 0xff0000,
+          //     // 粒子大小
+          //     size: 2
+          //   })
+          // );
+          const lessPos = getTxtData("Guitar");
+          const lessLen = lessPos.length;
+          const moreObj = geometry;
+          const moreArr = moreObj.attributes.position.array;
+          console.log(lessLen, moreArr.length);
+
+          const moreLen = moreArr.length;
+          let position2 = new Float32Array(moreLen);
+          // 先把顶点较少的模型顶点坐标放进数组
+          position2.set(lessPos);
+          // 剩余空间重复赋值
+          for (let i = lessLen, j = 0; i < moreLen; i++, j++) {
+            j %= lessLen;
+            position2[i] = lessPos[j];
+            position2[i + 1] = lessPos[j + 1];
+            position2[i + 2] = lessPos[j + 2];
+          }
+          // for (let i = 0; i < moreLen; i++) {
+          //   position2[i] = moreArr[i];
+          // }
+
+          let sizes = new Float32Array(moreLen);
+          for (let i = 0; i < moreLen; i++) {
+            sizes[i] = 4;
+          }
+          // 挂载属性值
+          moreObj.addAttribute("size", new THREE.BufferAttribute(sizes, 1));
+          moreObj.addAttribute(
+            "position2",
+            new THREE.BufferAttribute(position2, 3)
+          );
+          const o = {
+            v: 0
+          };
+          let uniforms = {
+            // 顶点颜色
+            color: {
+              type: "v3",
+              value: new THREE.Color(0x00ffff)
+            },
+            // 传递顶点贴图
+            texture: {
+              value: getTexture()
+            },
+            // 传递val值，用于shader计算顶点位置
+            val: {
+              value: o.v
+            }
+          };
+          // 着色器材料
+          let shaderMaterial = new THREE.ShaderMaterial({
+            uniforms,
+            vertexShader: document.getElementById("vertexshader").textContent,
+            fragmentShader: document.getElementById("fragmentshader")
+              .textContent,
+            blending: THREE.AdditiveBlending,
+            depthTest: false, // 这个不设置的话，会导致带透明色的贴图始终会有方块般的黑色背景
+            transparent: true
+          });
+          // 创建粒子系统
+          let particleSystem = new THREE.Points(geometry, shaderMaterial);
+
+          console.log(particleSystem.material.uniforms.val);
+          particleSystem.material.uniforms.val.value = o.v;
+          // scene.add(ps);
+          scene.add(particleSystem);
+          // console.log(r, ps);
+          renderer.render(scene, camera);
+          new TWEEN.Tween(o)
+            .delay(10000)
+            .to({ v: 1 }, 10000)
+            .onUpdate(() => {
+              particleSystem.material.uniforms.val.value = o.v;
+            })
+            .start();
+        })
+        .catch(e => {
+          console.error(e);
+        });
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.addEventListener("change", () => {
+        renderer.render(scene, camera);
+      });
+      controls.minDistance = 1;
+      // controls.maxDistance = 200;
+      controls.maxDistance = 10000;
+
+      function render() {
+        TWEEN.update();
+        requestAnimationFrame(render);
+        renderer.render(scene, camera);
+      }
+      render();
+    }
+
+    init();
+  </script>
+</html>

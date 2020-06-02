@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>找到了吗后台</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- <meta name="keywords" content="ok-admin v1.0,ok-admin网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载"> -->
+    <!-- <meta name="description" content="ok-admin v1.0，顾名思义，很赞的后台模版，它是一款基于Layui框架的轻量级扁平化且完全免费开源的网站后台管理系统模板，适合中小型CMS后台系统。"> -->
+    <!-- <link rel="shortcut icon" href="../imgs/favicon.ico"/> -->
+    <link rel="stylesheet" href="../css/okadmin.css">
+</head>
+
+<body>
+    <div class="ok-body">
+        <blockquote class="layui-elem-quote">
+            <span id="admin"></span>！当前时间: <span id="nowTime"></span> <span id="weekday"></span>
+        </blockquote>
+        <fieldset class="layui-elem-field">
+            <legend>数据统计</legend>
+            <div class="layui-row layui-col-space10 layui-row-margin" style="height: 300px;">
+                <div class="layui-col-md2" style="height: 100%;">
+                    <div class="layui-bg-green md2-sub1">
+                        <i class="iconfont icon-dianliyonghuzongshu"></i>
+                    </div>
+                    <div class="md2-sub2">
+                        <span id="totaluser"></span>
+                        <cite>用户总数</cite>
+                    </div>
+                    <div class="bottom" style="margin-top: 140px;">
+                        <div class="layui-bg-blue md2-sub1">
+                            <i class="iconfont icon-wenzhang2"></i>
+                        </div>
+                        <div class="md2-sub2">
+                            <span id = "totalA"></span>
+                            <cite>文章总数</cite>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-md10">
+                    <div id="main1" style="width: 100%;height:300px;"></div>
+                </div>
+
+            </div>
+        </fieldset>
+
+        <blockquote class="layui-elem-quote">
+            事件数据统计
+        </blockquote>
+        <div id="main" style="width: 100%;height:400px;"></div>
+        <blockquote class="layui-elem-quote">
+            更新日志
+        </blockquote>
+        <ul class="layui-timeline">
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis">&#xe756;</i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">12月8日</h3>
+                    <p>
+                        完成后台的大体功能
+                    </p>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">给自己</h3>
+                    <ul>
+                        <li>但行好事 莫问前程</li>
+                        <li>纵有疾风起 人生不言弃</li>
+                    </ul>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">11月25日</h3>
+                    <p>
+                        正在准备后台
+                        <br>常常在想，要是有一个满足我项目所有基础页面的CMS该多好
+                        <br>今天，初始化项目
+                    </p>
+                </div>
+            </li>
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis layui-anim layui-anim-rotate layui-anim-loop">&#xe63e;</i>
+                <div class="layui-timeline-content layui-text">
+                    <div class="layui-timeline-title">过去</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!--js引入-->
+    <script src="../lib/layui/layui.js"></script>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../lib/echarts/echarts.common.min.js"></script>
+    <!--js逻辑-->
+    <script type="text/javascript">
+
+        layui.use("util", function () {
+            var util = layui.util;
+            util.fixbar({});
+        });
+
+        /**
+         * 初始化函数
+         */
+        setDate();
+        $.ajax({
+            type: "get",
+            url: "/lostandfound/ForAdmin",
+            data: { "method": "get" },
+            dataType: "json",
+            success: function (response) {
+                //admin
+                if (response.status == 0) {
+                    $("#admin").text("欢迎您：管理员")
+                    //超级管理员
+                } else if (response.status == 1) {
+                    $("#admin").text("欢迎您：超级管理员")
+                }
+
+            }
+        });
+        /**
+         * 获取当前时间
+         */
+        var nowDate1 = "";
+        function setDate() {
+            var date = new Date();
+            var year = date.getFullYear();
+            nowDate1 = year + "-" + addZero((date.getMonth() + 1)) + "-" + addZero(date.getDate()) + "  ";
+            nowDate1 += addZero(date.getHours()) + ":" + addZero(date.getMinutes()) + ":" + addZero(date.getSeconds());
+            document.getElementById("nowTime").innerHTML = nowDate1;
+            setTimeout('setDate()', 1000);
+        }
+
+        /**
+         * 年月日是分秒为10以下的数字则添加0字符串
+         * @param time
+         * @returns {number | *}
+         */
+        function addZero(time) {
+            var i = parseInt(time);
+            if (i / 10 < 1) {
+                i = "0" + i;
+            }
+            return i;
+        }
+
+        /**
+         * 初始化星期几
+         * @type {string}
+         */
+        var weekday = "星期" + "日一二三四五六".charAt(new Date().getDay());
+        document.getElementById("weekday").innerHTML = weekday;
+
+
+        var myChart = echarts.init(document.getElementById("main"));
+        // 指定图表的配置项和数据
+        $.ajax({
+            type: "get",
+            url: "/lostandfound/DrawImageS",
+            data: {"method":"column"},
+            dataType: "json",
+            success: function (response) {
+                var option = {
+                    title: {
+                        left: 'center',
+                        text: '事件发生情况统计',
+                    },
+                    color: ['#3398DB'],
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: response.place,
+                            axisTick: {
+                                alignWithLabel: true
+                            }
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '事件数量',
+                            type: 'bar',
+                            barWidth: '60%',
+                            data: response.total,
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+            },
+            error: function (error) {
+                console.log(error)
+            }
+
+        });
+
+        var myChart1 = echarts.init(document.getElementById("main1"));
+        $.ajax({
+            type: "get",
+            url: "/lostandfound/DrawImageS",
+            data: { "method": "line" },
+            dataType: "json",
+            success: function (response) {
+                var days = response.day.map(x => x + "号")
+                option = {
+                    title: {
+                        left: 'center',
+                        text: "最近新增用户数",
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: days,
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                        data: response.total,
+                        type: 'line'
+                    }]
+                };
+                myChart1.setOption(option)
+            }
+        });
+        // 使用刚指定的配置项和数据显示图表。
+        $.ajax({
+            type: "get",
+            url: "/lostandfound/DrawImageS",
+            data: {"method":"info"},
+            dataType: "json",
+            success: function (response) {
+                $("#totaluser").html(response.userTotal);
+                $("#totalA").html(response.eventTotal);
+            }
+        });
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>textParticle</title>
+    <style>
+      /* canvas {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: linear-gradient(#e4e0ba, #f7d9aa);
+      } */
+    </style>
+  </head>
+  <body></body>
+  <script src="./lib/three.js"></script>
+  <script src="./lib/tween.js"></script>
+  <script src="./lib/orbitcontrol.js"></script>
+  <script>
+    function getTxtData(str) {
+      const c = document.createElement("canvas");
+      c.width = innerHeight;
+      c.height = innerWidth;
+      // document.body.appendChild(c);
+      const t = c.getContext("2d");
+      t.fillStyle = "#f00";
+      t.font = "150px Georgia";
+      t.fillText(str, 100, 100);
+      const { data, width, height } = t.getImageData(
+        0,
+        0,
+        innerHeight,
+        innerWidth
+      );
+      const temp = [];
+      const gap = 3;
+      for (let w = 0; w < width; w += gap) {
+        for (let h = 0; h < height; h += gap) {
+          const index = (h * width + w) * 4;
+          if (data[index] == 255) {
+            temp.push(w / 10, -h / 10, 0);
+          }
+        }
+      }
+      return new Float32Array(temp);
+    }
+    function init() {
+      const scene = new THREE.Scene();
+      // 创建球体模型
+      const ball = new THREE.SphereGeometry(40, 30, 30);
+      // 创建粒子材料
+      const pMaterial = new THREE.PointsMaterial({
+        // 粒子颜色
+        color: 0xff0000,
+        // 粒子大小
+        size: 2
+      });
+      const camera = new THREE.PerspectiveCamera(
+        27,
+        window.innerWidth / window.innerHeight,
+        5,
+        3500
+      );
+      camera.rotation.x = -0.01;
+      camera.rotation.y = -0.91;
+      camera.rotation.z = -0.01;
+      camera.position.x = -79;
+      camera.position.z = 61;
+      // scene.add(hemisphereLight);
+      // scene.add(shadowLight);
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+      const geometry = new THREE.BufferGeometry();
+      const m = getTxtData("I am here");
+      geometry.addAttribute("position", new THREE.BufferAttribute(m, 3));
+      const newPositions = getTxtData("lhyt");
+      const newLen = newPositions.length;
+      const positionArr = geometry.attributes.position.array;
+
+      const positionLen = positionArr.length;
+      const position2 = new Float32Array(positionLen);
+      position2.set(newPositions);
+      // 顶点较少的模型顶点坐标，后半部分重复赋值
+      // 其实也可以隐藏的，不过重复赋值效果好一些
+      for (let i = newLen, j = 0; i < positionLen; i++, j++) {
+        position2[i] = newPositions[j];
+        position2[i + 1] = newPositions[j + 1];
+        position2[i + 2] = newPositions[j + 2];
+      }
+
+      geometry.addAttribute(
+        "position2",
+        new THREE.BufferAttribute(position2, 3)
+      );
+      const o = {
+        v: 0,
+        s: 1,
+        c: 0x00ffff
+      };
+      let uniforms = {
+        // 顶点颜色
+        color: {
+          type: "v3",
+          value: new THREE.Color(o.c)
+        },
+        // 传递lamda、size1值，用于shader计算顶点位置
+        lamda: {
+          value: o.v
+        },
+        size1: {
+          value: o.s
+        }
+      };
+      // 着色器材料
+      const shaderMaterial = new THREE.ShaderMaterial({
+        uniforms,
+        vertexShader: `
+        attribute float size;
+        attribute vec3 position2;
+        uniform float lamda; // 自己传入
+        uniform float size1; // 自己传入
+        void main() {
+            vec3 temp;
+            temp.x = position.x * lamda + position2.x * (1. - lamda);
+            temp.y = position.y * lamda + position2.y * (1. - lamda);
+            temp.z = position.z * lamda + position2.z * (1. - lamda);
+            vec4 mvPosition = modelViewMatrix * vec4( temp, 1.0 );
+            gl_PointSize = size1;
+            gl_Position = projectionMatrix * mvPosition;
+        }
+        `,
+        fragmentShader: `
+        uniform vec3 color;
+        void main() {
+            gl_FragColor = vec4(color, 1.0);
+        }
+        `,
+        blending: THREE.AdditiveBlending,
+        depthTest: false, // 这个不设置的话，会导致带透明色的贴图始终会有方块般的黑色背景
+        transparent: true
+      });
+      // 创建粒子系统
+      const particleSystem = new THREE.Points(geometry, shaderMaterial);
+
+      scene.add(particleSystem);
+      // console.log(r, ps);
+      renderer.render(scene, camera);
+      new TWEEN.Tween(o)
+        .delay(1000)
+        .to({ v: 1, s: 10, c: 0x0000ff }, 2000)
+        .onUpdate(() => {
+          particleSystem.material.uniforms.lamda.value = o.v;
+          particleSystem.material.uniforms.size1.value = o.s;
+          particleSystem.material.uniforms.color.value = new THREE.Color(o.c);
+        })
+        .start();
+
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.addEventListener("change", () => {
+        renderer.render(scene, camera);
+      });
+      controls.minDistance = 1;
+      // controls.maxDistance = 200;
+      controls.maxDistance = 10000;
+
+      function render() {
+        TWEEN.update();
+        requestAnimationFrame(render);
+        renderer.render(scene, camera);
+      }
+      render();
+    }
+
+    init();
+  </script>
+</html>

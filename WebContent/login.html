@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<style type="text/css">
+	#headPic {
+		width: 200px;
+		height: 200px;
+		border-radius: 200px;
+	}
+</style>
+</head>
+<body>
+	<!-- 展示头像 -->
+	<div>
+		<img src="img\initialPic.jpg" alt="" id="headPic">
+	</div>
+	<form onsubmit="return check();">
+		学号：<input type="text" id="stuId" onchange="showHead()"><br> 
+		密码:：<input type="password" id="uPwd"><br> 
+		<button type="button" onclick="login()">登录</button>
+	</form>
+	<script type="text/javascript">
+	//判断是否登录状态
+	window.onload=isLogin();
+	function isLogin(){
+		$.ajax({
+			url : "GetSession2",
+			dataType : "json",
+			async : true,
+			type : "POST",
+			success : function(result){
+				console.dir(result);
+				if(result!=null){
+					location.href="index.html";
+				}
+			} 
+		});
+	}
+		function login() {
+			var flag = false;
+			var stuId = $('#stuId').val();
+			var pwd = $('#uPwd').val();
+			console.log(stuId);
+			$.ajax({
+				url : "UserLogin",
+				dataType : "json",
+				async : false,
+				type : "POST",
+				data : {
+					"stuId" : stuId,
+					"uPwd" : pwd
+				},
+				success : function(result) {
+					flag = result;
+				}
+			});
+			if(flag==true){
+				alert('登录成功！');
+				window.location.href="index.html";
+			}else {
+				alert('账号或密码输入有误，请重新输入！');
+				$('#uPwd').val(null);
+			}
+		}
+		
+		function showHead(){
+			var stuId = $('#stuId').val();
+			$.ajax({
+				url : "LoginingGetHead",
+				dataType : "json",
+				async : true,
+				type : "POST",
+				data : {
+					"stuId" : stuId
+				},
+				success : function(result) {
+					var html = "";
+					if (result != null) {
+						$('#headPic').attr("src",result);
+					}else {
+						$('#headPic').attr("src","img/initialPic.jpg");
+					}
+				}
+			});
+		}
+		
+	</script>
+</body>
+</html>

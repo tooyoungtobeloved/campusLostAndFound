@@ -1,0 +1,819 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
+
+/*  */
+
+a {
+    color: #000;
+    text-decoration: none;
+}
+
+ul {
+    color: #000;
+    text-decoration: none;
+}
+
+.headerbox {
+    color: #bac9c6;
+    float: left;
+    width: 270px;
+    height: 100%;
+    position: fixed;
+    background-color: #fffde7;
+}
+
+.logo {
+    margin-top: 65px;
+    margin-left: 32px;
+    height: 80px;
+}
+
+.login {
+    color: #bac9c6;
+    height: 65px;
+    margin-top: 75px;
+    margin-left: 52px;
+}
+
+.login a {
+    text-decoration: none;
+}
+
+
+/*登录注册设置空  both在左右两侧均不允许浮动元素 */
+
+.clear:after {
+    display: block;
+    clear: both;
+    content: '';
+    visibility: hidden;
+    height: 0;
+}
+
+.navigation {
+    margin-left: 45px;
+    list-style: none;
+    line-height: 30px;
+}
+
+.navigation a {
+    text-decoration: none;
+    line-height: 35px;
+}
+
+.navigation a:hover,
+.login a:hover {
+    color: #324a54;
+    text-decoration: underline;
+}
+
+.rightbox {
+    width: auto;
+    height: 450px;
+    margin-left: 272px;
+}
+
+.carousel li {
+    list-style-type: none;
+}
+
+.carousel img {
+    border: 0;
+}
+
+.carousel {
+    background: #fdf4aa;
+}
+
+
+/* 所有图片显示区域*/
+
+.carousel #picture {
+    position: relative;
+    overflow: hidden;
+    height: 450px;
+    width: 1500px;
+    z-index: 2;
+    margin: 0 auto;
+}
+
+
+/*  旋转的区域*/
+
+.carousel #picture ul {
+    width: 870px;
+    height: 280px;
+    position: relative;
+    top: 30px;
+    left: 300px;
+}
+
+.carousel #picture ul li {
+    position: absolute;
+}
+
+.carousel #picture ul img {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+
+/* 设置图片大小*/
+
+.carousel #picture ul li.picture1 img {
+    width: 216.5px;
+    height: 248px;
+}
+
+.carousel #picture ul li.picture2 img {
+    width: 225.5px;
+    height: 259px;
+}
+
+.carousel #picture ul li.picture3 img {
+    width: 230.5px;
+    height: 264px;
+}
+
+.carousel #picture ul li.picture4 img {
+    width: 247.5px;
+    height: 285px;
+}
+
+.carousel #picture ul li.picture5 img {
+    width: 247.5px;
+    height: 285px;
+}
+
+.carousel #picture ul li.picture6 img {
+    width: 230.5px;
+    height: 264px;
+}
+
+.carousel #picture ul li.picture7 img {
+    width: 225.5px;
+    height: 259px;
+}
+
+.carousel #picture ul li.picture8 img {
+    width: 216.5px;
+    height: 248px;
+}
+
+
+/*图片位置*/
+
+.carousel #picture ul .picture1 {
+    top: -285px;
+    left: -231px;
+    z-index: 0;
+}
+
+.carousel #picture ul .picture2 {
+    top: -23px;
+    left: -99.5px;
+    z-index: 2;
+}
+
+.carousel #picture ul .picture3 {
+    top: 66px;
+    left: 68px;
+    z-index: 3;
+}
+
+.carousel #picture ul .picture4 {
+    top: 110px;
+    left: 247.5px;
+    z-index: 4;
+}
+
+.carousel #picture ul .picture5 {
+    top: 110px;
+    left: 495px;
+    z-index: 3;
+}
+
+.carousel #picture ul .picture6 {
+    top: 66px;
+    left: 695.5px;
+    z-index: 2;
+}
+
+.carousel #picture ul .picture7 {
+    top: -23px;
+    left: 852px;
+    z-index: 1;
+}
+
+.carousel #picture ul .picture8 {
+    top: -285px;
+    left: 1000px;
+    z-index: 0;
+}
+
+.carousel #picture ul .picture1 a {
+    width: 216.5px;
+    height: 248px;
+}
+
+.carousel #picture ul .picture2 a {
+    width: 225.5px;
+    height: 259px;
+}
+
+.carousel #picture ul .picture3 a {
+    width: 247.5px;
+    height: 285px;
+}
+
+.carousel #picture ul .picture4 a {
+    width: 247.5px;
+    height: 285px;
+}
+
+.carousel #picture ul .picture5 a {
+    width: 247.5px;
+    height: 285px;
+}
+
+.carousel #picture ul .picture6 a {
+    width: 247.5px;
+    height: 285px;
+}
+
+.carousel #picture ul .picture7 a {
+    width: 225.5px;
+    height: 259px;
+}
+
+.carousel #picture ul .picture8 a {
+    width: 216.5px;
+    height: 248px;
+}
+
+.carousel #picture ul li:hover {
+    background: #fcf8d0;
+}
+
+.carousel #picture ul li.picture1 {
+    opacity: 0.2;
+    filter: alpha(opacity: 20);
+}
+
+.carousel #picture ul li.picture2 {
+    opacity: 0.6;
+    filter: alpha(opacity: 60);
+}
+
+.carousel #picture ul li.picture3 {
+    opacity: 0.8;
+    filter: alpha(opacity: 80);
+}
+
+.carousel #picture ul li.picture4 {
+    opacity: 1;
+    filter: alpha(opacity: 100);
+}
+
+.carousel #picture ul li.picture5 {
+    opacity: 1;
+    filter: alpha(opacity: 100);
+}
+
+.carousel #picture ul li.picture6 {
+    opacity: 0.8;
+    filter: alpha(opacity: 80);
+}
+
+.carousel #picture ul li.picture7 {
+    opacity: 0.6;
+    filter: alpha(opacity: 60);
+}
+
+.carousel #picture ul li.picture8 {
+    opacity: 0.2;
+    filter: alpha(opacity: 20);
+}
+
+.carousel #picture span {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+    width: 45px;
+    height: 100px;
+    position: absolute;
+    top: 140px;
+    z-index: 30;
+    cursor: pointer;
+    opacity: 0.7;
+    filter: alpha(opacity=70);
+}
+
+.carousel #picture:hover span {
+    opacity: 1;
+    filter: alpha(opacity=100);
+}
+
+.carousel #picture span img {
+    width: 45px;
+    height: 100px;
+    display: block;
+}
+
+.carousel #picture span.prev {
+    background: url(../img/l.png) no-repeat;
+    position: absolute;
+    top: 140px;
+    left: 1px;
+    display: inline-block;
+    width: 45px;
+    height: 100px;
+}
+
+.carousel #picture span.next {
+    background: url(../img/r.png) no-repeat;
+    position: absolute;
+    top: 140px;
+    right: 1px;
+    display: inline-block;
+    width: 45px;
+    height: 100px;
+}
+
+.carousel #picture span.prev:hover {
+    background: url(../img/l.png) no-repeat;
+}
+
+.carousel #picture span.next:hover {
+    background: url(../img/r.png) no-repeat;
+}
+
+
+/* 搜索框样式*/
+
+.rightbox {
+    height: 1000px;
+}
+
+.search {
+    width: 240px;
+    height: 50px;
+    background: #fff176;
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+}
+
+.search #btn {
+    width: 50px;
+    height: 50px;
+}
+
+#textfield {
+    float: left;
+    width: 176px;
+    height: 37px;
+    border: 1px solid #363847;
+    line-height: 35px;
+    margin-left: 2px;
+    margin-top: 7px;
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    background: none;
+}
+
+.rightleft {
+    width: 240px;
+    height: 900px;
+    float: left;
+}
+
+
+/*免费发布*/
+
+.rightleft .free {
+    width: 240px;
+    height: 58px;
+    cursor: pointer;
+}
+
+.demo p {
+    width: 240px;
+    height: 30px;
+    margin-top: -10px;
+    padding-top: 3px;
+    background: #fff176;
+    padding-left: 3px;
+    color: #000;
+}
+
+.rightleft #demo {
+    font-size: 20px;
+    overflow: hidden;
+    height: 130px;
+    width: 240px;
+    position: relative;
+    margin-top: -10px;
+    border: 1px solid #fff176;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#demo1 {
+    height: auto;
+    text-align: left;
+}
+
+#demo2 {
+    height: auto;
+    margin-top: -8px;
+    text-align: left;
+}
+
+#demo1 li {
+    list-style-type: none;
+    line-height: 30px;
+    height: 22px;
+    text-align: left;
+    text-indent: 10px;
+}
+#kinds {
+    margin: -25px;
+    font: inherit;
+    color: inherit;
+}
+#demo2 li {
+    list-style-type: none;
+    line-height: 30px;
+    height: 22px;
+    text-align: left;
+    text-indent: 10px;
+}
+
+
+/*  我要报喜*/
+
+.goodnews {
+    width: 240px;
+    height: 306px;
+}
+
+.goodnews .p_left {
+    width: 120px;
+    height: 30px;
+    background: #fff176;
+    float: left;
+    padding-top: 3px;
+    padding-left: 3px;
+}
+
+.goodnews #p_right {
+    width: 120px;
+    height: 30px;
+    background: #fff176;
+    float: left;
+    padding-top: 3px;
+    padding-left: 37px;
+    cursor: pointer;
+}
+
+.goodnews ul {
+    font-size: 20px;
+    /* color:#4b8abf;  */
+    overflow: hidden;
+    padding-top: 1px;
+    height: 277px;
+    width: 240px;
+    position: relative;
+    margin-top: -10px;
+    float: left;
+    line-height: 30px;
+    border: 1px solid #fff176;
+    text-indent: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/*帮助中心*/
+
+.help {
+    width: 240px;
+    height: 155px;
+}
+
+.help .p_left {
+    width: 120px;
+    height: 30px;
+    background: #fff176;
+    float: left;
+    margin-top: -10px;
+    padding-top: 3px;
+    padding-left: 3px;
+}
+
+.help #h_right {
+    width: 120px;
+    height: 30px;
+    background: #fff176;
+    float: left;
+    margin-top: -10px;
+    padding-top: 3px;
+    padding-left: 45px;
+    cursor: pointer;
+}
+
+.help ul {
+    font-size: 20px;
+    overflow: hidden;
+    padding-top: 1px;
+    height: 149px;
+    width: 240px;
+    position: relative;
+    margin-top: -10px;
+    float: left;
+    border: 1px solid #fff176;
+    text-indent: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.code {
+    width: 240px;
+    height: 15px;
+    margin-top: 24px;
+    border: 1px solid #fff176;
+}
+
+
+/*右边的右边*/
+
+.rightright {
+    width: auto;
+    height: 900px;
+    margin-left: 240px;
+    position: relative;
+}
+
+.rightright .l_left {
+    width: auto;
+    height: 30px;
+    background: #fffde7;
+    padding-top: 3px;
+    padding-left: 3px;
+    color: #000;
+}
+
+#l_right {
+    padding-left: 680px;
+    cursor: pointer;
+    position: absolute;
+    /* top: 400px; */
+    right: 0px;
+}
+
+.rightright .f_left {
+    width: auto;
+    height: 30px;
+    background: #fffde7;
+    margin-top: -10px;
+    padding-top: 3px;
+    padding-left: 3px;
+    color: #000;
+}
+
+#f_right {
+    position: absolute;
+    right: 0px;
+    /* padding-left: 1400px;	 */
+    cursor: pointer;
+}
+
+.rightright .lost ul p {
+    font-size: 100%;
+    font-weight: normal;
+}
+
+.rightright .found ul p {
+    font-size: 100%;
+    font-weight: normal;
+}
+
+.rightright .lost h3 {
+    margin-top: -2px;
+}
+
+.rightright .found h3 {
+    margin-top: -2px;
+}
+
+.rightright .lost ul li {
+    list-style: none;
+}
+
+.rightright .found ul li {
+    list-style: none;
+}
+
+.rightright .lost ul {
+    width: auto;
+    height: 420px;
+    margin-top: 20px;
+    overflow: hidden;
+    padding: 12px 0px 0px 60px;
+}
+
+.rightright .found ul {
+    margin-top: 20px;
+    width: auto;
+    height: 420px;
+    overflow: hidden;
+    padding: 12px 0px 0px 60px;
+}
+
+.rightright .lost ul li a {
+    background: #fffde7;
+    text-decoration: none;
+    /* color:#4b8abf;        */
+    display: block;
+    height: 165px;
+    width: 200px;
+    padding: 8px;
+    /* 阴影*/
+    -moz-box-shadow: 5px 5px 7px rgba(33, 33, 33, 1);
+    /* Safari+Chrome */
+    -webkit-box-shadow: 5px 5px 7px rgba(33, 33, 33, .7);
+    /* Opera */
+    box-shadow: 5px 5px 7px rgba(33, 33, 33, .7);
+    /* 倾斜*/
+    -webkit-transform: rotate(-6deg);
+    -o-transform: rotate(-6deg);
+    -moz-transform: rotate(-6deg);
+    /*trasition 达到平滑的效果*/
+    -moz-transition: -moz-transform .15s linear;
+    -o-transition: -o-transform .15s linear;
+    -webkit-transition: -webkit-transform .15s linear
+}
+
+.rightright .found ul li a {
+    background: #fffde7;
+    text-decoration: none;
+    /* color:#4b8abf;        */
+    display: block;
+    height: 165px;
+    width: 200px;
+    padding: 8px;
+    -moz-box-shadow: 5px 5px 7px rgba(33, 33, 33, 1);
+    /* Safari+Chrome */
+    -webkit-box-shadow: 5px 5px 7px rgba(33, 33, 33, .7);
+    /* Opera */
+    box-shadow: 5px 5px 7px rgba(33, 33, 33, .7);
+    /* 倾斜*/
+    -webkit-transform: rotate(-6deg);
+    -o-transform: rotate(-6deg);
+    -moz-transform: rotate(-6deg);
+    /*trasition 达到平滑的效果*/
+    -moz-transition: -moz-transform .15s linear;
+    -o-transition: -o-transform .15s linear;
+    -webkit-transition: -webkit-transform .15s linear
+}
+
+.rightright .lost ul li {
+    margin: 15px;
+    float: left;
+}
+
+.rightright .found ul li {
+    margin: 15px;
+    float: left;
+}
+
+
+/* 让正方形随机倾斜，而不是全部都倾斜，让正方形在每2个倾斜4个deg，每3个倾斜负3个deg,每5个倾斜5个deg*/
+
+.rightright .lost ul li:nth-child(even) a {
+    -o-transform: rotate(4deg);
+    -webkit-transform: rotate(4deg);
+    -moz-transform: rotate(4deg);
+    position: relative;
+    top: 5px;
+    background-color: #fff176;
+}
+
+.rightright .lost ul li:nth-child(3n) a {
+    -o-transform: rotate(-3deg);
+    -webkit-transform: rotate(-3deg);
+    -moz-transform: rotate(-3deg);
+    position: relative;
+    top: -5px;
+    background: #fff59d;
+}
+
+.rightright .lost ul li:nth-child(5n) a {
+    -o-transform: rotate(5deg);
+    -webkit-transform: rotate(5deg);
+    -moz-transform: rotate(5deg);
+    position: relative;
+    top: -10px;
+}
+
+.rightright .found ul li:nth-child(even) a {
+    -o-transform: rotate(4deg);
+    -webkit-transform: rotate(4deg);
+    -moz-transform: rotate(4deg);
+    position: relative;
+    top: 5px;
+    background: #fffde7;
+}
+
+.rightright .found ul li:nth-child(3n) a {
+    -o-transform: rotate(-3deg);
+    -webkit-transform: rotate(-3deg);
+    -moz-transform: rotate(-3deg);
+    position: relative;
+    top: -5px;
+    background: #ffff8d;
+}
+
+.rightright .found ul li:nth-child(5n) a {
+    -o-transform: rotate(5deg);
+    -webkit-transform: rotate(5deg);
+    -moz-transform: rotate(5deg);
+    position: relative;
+    top: -10px;
+}
+
+
+/*Hover和Focus时放缩正方形*/
+
+.rightright .lost ul li a:hover,
+.rightright .lost ul li a:focus {
+    -moz-box-shadow: 10px 10px 7px rgba(0, 0, 0, .7);
+    -webkit-box-shadow: 10px 10px 7px rgba(0, 0, 0, .7);
+    box-shadow: 10px 10px 7px rgba(0, 0, 0, .7);
+    -webkit-transform: scale(1.25);
+    -moz-transform: scale(1.25);
+    -o-transform: scale(1.25);
+    position: relative;
+    z-index: 5;
+}
+
+.rightright .found ul li a:hover {
+    -moz-box-shadow: 10px 10px 7px rgba(0, 0, 0, .7);
+    -webkit-box-shadow: 10px 10px 7px rgba(0, 0, 0, .7);
+    box-shadow: 10px 10px 7px rgba(0, 0, 0, .7);
+    -webkit-transform: scale(1.25);
+    -moz-transform: scale(1.25);
+    -o-transform: scale(1.25);
+    position: relative;
+    z-index: 5;
+}
+
+
+/* .s_cards {
+    width: auto;
+    height: 30px;
+    background: #fffde7;
+    padding-top: 3px;
+    padding-left: 3px;
+    color: #000;
+} */
+
+#cards {
+    width: auto;
+    height: 120px;
+    margin-top: 129px;
+    position: relative;
+    overflow: hidden;
+}
+
+#cards ul {
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    background: #fffde7;
+}
+
+#cards ul li {
+    float: left;
+    width: 185px;
+    height: 120px;
+    list-style: none;
+    margin-left: 10px;
+    /* border: 1px solid #fff176; */
+}
+
+#footer {
+    width: auto;
+    height: 100px;
+    margin-top: 10px;
+    text-align: center;
+    padding-top: 30px;
+}

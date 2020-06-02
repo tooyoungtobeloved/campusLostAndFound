@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>投诉建议</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/mycss.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/ljf.css" />
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="css/tess.css">
+</head>
+
+<body>
+
+<!-- 登录模态框 -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="gridSystemModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="g-container">
+				<h2>登录</h2>
+				<form onsubmit="return check();" class="layui-form">
+					<div class="g-username">
+						<input name="loginPhoneOrEmail" maxlength="64" placeholder="请输入学号"
+							class="input" id="stuId"> <img
+							src="img/greeting.1415c1c.png" class="g-username">
+					</div>
+
+					<div class="g-password">
+						<input name="loginPassword" type="password" maxlength="64"
+							placeholder="请输入密码" class="input" id="uPwd"> <img
+							src="img/blindfold.58ce423.png" class="g-password">
+					</div>
+					<img src="img/normal.0447fe9.png" class="g-normal">
+					<button type="button" class="btn btn-primary btn-lg btn-block"
+						style="background-color: #fff176; border: 0px;" onclick="login()">登录</button>
+				</form>
+				<div style="margin-top: 16px; font-size: 16px;">
+					没有账号？ <a href="register.html">注册</a><span
+						style="float: right;"><a onclick="forgetpwd()">忘记密码</a></span>
+				</div>
+				<div style="margin-top: 20px; font-size: 16px;">
+					注册登录即表示同意<a href="/terms" target="_blank">用户协议</a>、<a
+						href="/privacy" target="_blank">隐私政策</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+    <div class="container-fluid">
+        <div class="row">
+
+           <div class="collapse navbar-collapse" id="navbar-collapse"
+				style="padding-left: 0px;">
+				<div class="col-sm-3 col-md-2 sidebar"
+					style="position: fixed; padding-left: 20px; padding-right: 20px;">
+					<div class="logo">
+						<a href="#"><img src="img/logo.png" alt="logo"></a>
+					</div>
+					<div style="text-align: center; margin-bottom: 10px;">
+						<div>
+							<img id="head-img" style="width: 90px; height: 90px;border-radius: 90px;"
+								src="img/signin.png" alt="" style="display:unset;">&nbsp;
+						</div>
+						<div class="login" id="logindiv"
+							style="margin: 20px auto; height: 35px;">
+							<!-- <div style='margin: 0 auto;'><a href='register.html' style='font-size: 18px;color:#000;'>注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+						<a data-toggle='modal' data-target='#myModal'
+							style='font-size: 18px;color:#000;cursor: pointer;' >登录</a></div>; -->
+							</div>
+						<!-- <span style="margin: 0 auto;"><a data-toggle="modal"
+							data-target="#myModal1" style="font-size: 18px;">注册</a>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+						<a data-toggle="modal" data-target="#myModal"
+							style="font-size: 18px;">登录</a> -->
+					</div>
+					<ul class="nav nav-sidebar" id="navSidebar">
+						<li><a href="index.html"><span
+								class="glyphicon glyphicon-home"></span> &nbsp;首页</span></a></li>
+								<li><a href="lostAndFound.html?eType=失物招领"><span
+								class="glyphicon glyphicon-heart"></span> &nbsp;失物招领</a></li>
+						<li><a href="lostAndFound.html?eType=寻物启事"><span
+								class="glyphicon glyphicon-lock "></span> &nbsp;寻物启事</a></li>
+						<li><a href="lostAndFound.html?eType=寻人启事"><span
+								class="glyphicon glyphicon-user"></span> &nbsp;寻人启事</a></li>
+						
+						<li onclick='pubEvent()' style='cursor: pointer;'><a href="#"><span
+								class="glyphicon glyphicon-send"></span>&nbsp;免费发布</a></li>
+						<li><a href="instructPage.html"><span
+								class="glyphicon glyphicon-info-sign"></span>&nbsp; 帮助中心</a></li>
+								<li  class="active"><a href="contact.html" id="suggest"><span
+								class="glyphicon glyphicon-comment"></span>&nbsp; 投诉建议</a></li>
+					</ul>
+				</div>
+			</div>
+            <!-- col-md-offset-2  -->
+            <div
+				class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-1 main tab-body-div current">
+				<div class="container">
+					<h2 style="text-align: center; color: #000;">联系我们</h2>
+					<div class="row cmain">
+						<div class="conleft col-lg-6 col-md-6 col-sm-6 col-xs-6">
+							<h3>请选择反馈类型</h3>
+							<div class="sub">
+								<form class="form-horizontal layui-form" id="myform">
+									<div class="subtype">
+										<label class="radio-inline"> <input type="radio"
+											name="type" id="inlineRadio1" value="产品建议" checked>产品建议
+										</label> <label class="radio-inline"> <input type="radio"
+											name="type" id="inlineRadio2" value="投诉反馈">投诉反馈
+										</label> <label class="radio-inline"> <input type="radio"
+											name="type" id="inlineRadio3" value="程序报错">程序报错
+										</label>
+									</div>
+									<label for="">姓名(选填)</label>
+									<div class="form-group">
+										<div class="col-sm-12">
+											<input type="text" class="form-control" name="name"
+												id="inputEmail3" placeholder="姓名">
+										</div>
+									</div>
+									<label for="">联系方式(必填)</label>
+									<div class="form-group">
+										<div class="col-sm-12">
+											<input type="text" class="form-control" id="inputPassword3"
+												placeholder="联系方式" lay-verify="required|phone"
+												name="contact">
+										</div>
+									</div>
+									<div class="col-sm-12 col-lg-12 col-md-12 msg">
+										<textarea name="msg" id="msg" cols="30" rows="10"
+											placeholder="输入您的建议" lay-verify="pass" name="msg"></textarea>
+										<span>最多200字</span>
+									</div>
+									<div class="subbtn" style="text-align: center;">
+										<button class="btn btn-primary subb" lay-submit
+											lay-filter="go" style="background: #fff176; border: #fff176;">发送</button>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="conright col-lg-6 col-md-6 col-sm-6 col-xs-6">
+							<div class="jumbotron" style="height: 510px;">
+								<div class="page-header">
+									<h1>
+										Hello <small>，小伙伴！</small>
+									</h1>
+								</div>
+								<p>这是一个很好的机会，让我们知道我们的工作情况。</p>
+								<p>有了您的支持和帮助，我们就可以及时改正缺点，发扬优点，更好地为您提供服务。</p>
+
+								（为了给您及时有效的解决问题，请您务必填写<i>有效的联系电话及邮箱地址</i>，这样可以方便我们对事件的了解和处理。 我们保证：<br>
+								<i>您的填写资料不会被任何第三方知道</i>。给我们一份信任，还您一份公平！） <br> <br> <br>
+								<p>
+									<a class="btn btn-primary btn-lg" href="#" role="button" style="background: #fff176; border: #fff176;">返回首页</a>
+								</p>
+
+
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+				<div class="footer">
+					<p>把失物招领之家 | 设为主页 | About | 方向班第9组 | 广告推广</p>
+					<p>2017 llizigege 使用失物招领之家前必读 意见反馈 赣ICP证030173号
+						赣公网安备11000002000001号</p>
+				</div>
+			</div>
+
+        </div>
+
+    </div>
+    </div>
+
+
+    <script>
+        // 获取标签栏的所有标签元素对象
+        var tabs = document.getElementsByClassName('tab-head-div');
+        // 获取标签栏的所有内容对象
+        var divs = document.getElementsByClassName('tab-body-div');
+        for (var i = 0; i < tabs.length; ++i) { // 遍历标签部分的元素对象
+            tabs[i].onclick = function () { // 为标签元素对象添加鼠标滑过事件
+                for (var i = 0; i < divs.length; ++i) { // 遍历标签栏的内容元素对象
+                    if (tabs[i] == this) { // 显示当前鼠标滑过的li元素
+                        divs[i].classList.add('current');
+                        tabs[i].classList.add('active');
+                    } else { // 隐藏其他li元素
+                        divs[i].classList.remove('current');
+                        tabs[i].classList.remove('active');
+                    }
+                }
+            };
+        }
+    </script>
+	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="js/util.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="layui/layui.js"></script>
+    <script>
+    
+        layui.use(['form', 'layer'], function () {
+            var form = layui.form;
+            var layer = layui.layer;
+            var $ = layui.$;
+            form.verify({
+                pass: function (value) {
+                    if (value.length > 200) {
+                        return '内容不能超过200个字哦';
+                    }
+                }
+            });
+            form.on('submit(go)', function (data) {
+                console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+                console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                $.ajax({
+                    type: "get",
+                    url: "Suggest",
+                    data: data.field,
+                    dataType: "html",
+                    success: function (response) {
+                        console.log(response)
+                        if (response == "success") {
+                            layer.msg("发送成功,感谢您的反馈")
+                            $(':input', '#myform')
+                                .not(':button,:submit,:reset,:hidden')   //将myform表单中input元素type为button、submit、reset、hidden排除
+                                .val('')  //将input元素的value设为空值
+                                .removeAttr('checked')
+                                .removeAttr('checked')
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+
+    </script>
+</body>
+
+</html>

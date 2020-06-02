@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>失物招领</title>
+	<script src="js/jquery-3.1.1.min.js"></script>
+	<script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/ljf.css" />
+	<link rel="stylesheet" href="css/tess.css">
+	<script type="text/javascript" src="layui/layui.js"></script>
+	<link rel="stylesheet" href="layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/mycss.css">
+    <link href="css/index.css" rel="stylesheet">
+
+</head>
+
+<body>
+<!-- 登录模态框（二） -->
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="gridSystemModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="g-container">
+				<h2>登录</h2>
+				<form onsubmit="return check();">
+					<div class="g-username">
+						<input name="loginPhoneOrEmail" maxlength="64" placeholder="请输入学号"
+							class="input" id="stuId" onchange="showHead()"> <img
+							src="img/greeting.1415c1c.png" class="g-username">
+					</div>
+
+					<div class="g-password">
+						<input name="loginPassword" type="password" maxlength="64"
+							placeholder="请输入密码" class="input" id="uPwd"> <img
+							src="img/blindfold.58ce423.png" class="g-password">
+					</div>
+
+					<img src="img/normal.0447fe9.png" class="g-normal">
+					<button type="button" class="btn btn-primary btn-lg btn-block"
+						style="background-color: #fff176; border: 0px;" onclick="login()">登录</button>
+				</form>
+				<div style="margin-top: 16px; font-size: 16px;">
+					没有账号？ <a href="register.html">注册</a><span
+						style="float: right;"><a href="/reset-password">忘记密码</a></span>
+				</div>
+				<div style="margin-top: 20px; font-size: 16px;">
+					注册登录即表示同意<a href="/terms" target="_blank">用户协议</a>、<a
+						href="/privacy" target="_blank">隐私政策</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid">
+		<div class="row">
+			<!-- <div class="collapse navbar-collapse" id="navbar-collapse">
+			
+				<div class="col-sm-3 col-md-2 sidebar" id='nav'>
+					 <div style="margin-bottom: 50px;">
+						<img src="img" alt="">
+					</div>
+					<ul class="nav nav-sidebar" >
+
+						<li style="text-align: center;"><a href="register.html">
+								<span class="glyphicon glyphicon-user">&nbsp;</span> 注册 | 登录
+								</button>
+						</a></li>
+						<li id="beforeslide"><a href="index.html"><span
+								class="glyphicon glyphicon-home"></span> 首页</span></a></li>
+
+					
+						<li class="active  tab-head-div"><a href="#"><span class="glyphicon glyphicon-lock "></span>
+                                寻物启事</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> 寻人启事</a>
+                        </li>
+                        <li><a href="#"><span class="glyphicon glyphicon-heart"></span> 招领启事</a>
+                        </li> 
+
+						<li><a href="describeInfo.html"><span
+								class="glyphicon glyphicon-search"></span> 帮助中心</a></li>
+						<li><a href="#"><span class="glyphicon glyphicon-question-sign"></span> 关于我们</a></li> 
+					</ul>
+				</div>
+			</div> -->
+			
+			
+			<!-- 左边固定导航 -->
+			<div class="collapse navbar-collapse" id="navbar-collapse"
+				style="padding-left: 0px;">
+				<div class="col-sm-3 col-md-2 sidebar" style="position: fixed;" id="nav">
+					<!-- <div class="logo">
+						<a href="#"><img src="img/logo.png" alt="logo"></a>
+					</div>
+					<div style="text-align: center; margin-bottom: 10px;">
+						<div>
+							<img id="head-img" style="width: 50px; height: 50px;" src="img/signin.png"
+								alt="" style="display:unset;">&nbsp;
+						</div>
+						<div class="login" id="logindiv" style="margin:20px auto; height:35px;"></div>						
+					</div>
+					<ul class="nav nav-sidebar" id="navSidebar" style="padding-left:5px;"]>
+						<li><a href="index.html"><span
+								class="glyphicon glyphicon-home"></span> &nbsp;首页</span></a></li>
+						<li class="active"><a href="lostAndFound.html?eType=寻物启事"><span
+								class="glyphicon glyphicon-lock "></span> &nbsp;寻物启事</a></li>
+						<li><a href="lostAndFound.html?eType=寻人启事"><span
+								class="glyphicon glyphicon-user"></span> &nbsp;寻人启事</a></li>
+						<li><a href="lostAndFound.html?eType=失物招领"><span
+								class="glyphicon glyphicon-heart"></span> &nbsp;失物招领</a></li>
+						<li><a href="使用说明.html"><span
+								class="glyphicon glyphicon-search"></span>&nbsp; 帮助中心</a></li>
+								<li onclick='pubEvent()' style='cursor: pointer;'><a href="#"><span
+								class="glyphicon glyphicon-search"></span>&nbsp;免费发布</a></li>
+						 <li><a href="aboutus"><span class="glyphicon glyphicon-question-sign"></span> &nbsp;关于我们</a></li> 
+					</ul> -->
+				</div>
+			</div>
+
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main  tab-body-div current">
+
+				<div class="container-fluid" style="padding: 15px;">
+					<div class="row">
+  <div class="col-lg-8 col-lg-offset-1">
+    
+    <div class="row">
+      <div class="col-xs-8 col-sm-8">
+        <ul class="nav nav-pills nav-justified" id="tips">
+  <li role="presentation"><a href="#">校园卡</a><>
+  <li role="presentation" ><a href="#">身份证</a><>
+  <li role="presentation"><a href="#">书籍</a><>
+  <li role="presentation"><a href="#">电子产品</a><>
+  <li role="presentation"><a href="#">其他</a><>
+</ul>
+      </div>
+      <div class="col-xs-4 col-sm-4">
+        <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search for..." style="height:42px;" id="index">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button" style="height:42px;" onclick="showPage('', '所有', 1)">搜索<tton>
+      </span>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
+					<!-- <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this">网站设置</li>
+                                <li>用户管理</li>
+                                <li>权限分配</li>
+                                <li>商品管理</li>
+                                <li>订单管理</li>
+                            </ul>
+                            <div class="layui-tab-content">
+                        </div>  -->
+					<div class="contentDetail" id="events">
+						<div class="i">
+							<i class="layui-icon layui-icon-loading-1 layui-icon layui-anim layui-anim-rotate layui-anim-loop "
+								style="font-size: 3rem; color: #FFB800;"> </i>
+						</div>
+
+						<!-- 分页插件 -->
+
+					</div>
+					<div id="tab1">
+						<ul class="pagination" id='divPage'>
+
+						</ul>
+					</div>
+				</div>
+
+
+				<!-- <div class="footer">
+                    <p>把失物招领之家 | 设为主页 | About | 方向班第9组 | 广告推广</p>
+                    <p>©2017 llizigege 使用失物招领之家前必读 意见反馈 赣ICP证030173号 赣公网安备11000002000001号 </p>
+                </div> -->
+
+
+
+			</div>
+
+			<div class="footer">
+				<p>把失物招领之家 | 设为主页 | About | 方向班第9组 | 广告推广</p>
+				<p>©2017 llizigege 使用失物招领之家前必读 意见反馈 赣ICP证030173号
+					赣公网安备11000002000001号</p>
+			</div>
+
+		</div>
+	</div>
+	
+	
+<script type="text/javascript" src="js/util.js"></script>
+	<script type="text/javascript" src="layui/layui.js"></script>
+	<script type="text/javascript" src="js/lostAndFound.js"></script>
+	
+</body>
+
+</html>

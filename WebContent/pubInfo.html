@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<title>发布信息</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="layui/layui.js"></script>
+<link rel="stylesheet" type="text/css" href="css/pubInfo.css" />
+
+</head>
+
+<body onchange="justify()">
+
+	<div class="pubform">
+		<form id="pubForm" enctype="multipart/form-data"
+			onsubmit="return checkForm()" >
+			<!-- 发布类型 -->
+			<div class="pubType">
+				<label for="" class="labtype"><span class="bitian">*</span>发布类型:&nbsp;</label>
+				<input type="radio" name="types" checked="checked" value="失物招领" />失物招领&nbsp;&nbsp;<input type="radio"
+					name="types" value="寻物启事" />寻物启事 &nbsp;&nbsp;<input type="radio"
+					name="types" value="寻人启事" />寻人启事<br />
+
+			</div>
+
+			<div class="title">
+				<div>
+					<label for="title"><span class="bitian">*</span>信息标题:&nbsp;&nbsp;
+					</label> <input type="text" class="text" id="title" name="title"
+						placeholder="请输入标题" maxlength="15" lay-verify="title" />
+				</div>
+
+			</div>
+
+			<div class="pubKind">
+				<label for=""><span class="bitian">*</span>物品种类：&nbsp;</label>
+					<select id="kinds" class="kinds" name="kinds">
+						<option value="0">请选择种类</option>
+						<option value="校园卡" selected="selected">校园卡</option>
+						<option value="身份证">身份证</option>
+						<option value="书籍">书籍类</option>
+						<option value="电子产品">电子产品</option>
+						<option value="其它">其它</option>
+					</select><br />
+				
+			</div>
+
+			<!-- 丢失地点 -->
+			<div class="place">
+				<label for="eplaces"><span class="bitian">*</span>发生地点：&nbsp;</label>
+				<select class="kinds" id="place" name="place" lay-verify="place">
+					<option value="0">请选择地点</option>
+					<option value="北区田径馆" selected="selected">北区田径馆</option>
+					<option value="北区田径场">北区田径场</option>
+					<option value="南区田径场">南区田径场</option>
+					<option value="主图书馆">主图书馆</option>
+					<option value="立信楼">逸夫图书馆</option>
+					<option value="文友楼">文理实验楼</option>
+					<option value="其它">其它</option>
+				</select> <input type="text" class="text" id="pdetail" name="place2"
+					placeholder="请输入详细地址" maxlength="15" onkeyup="cal1();"
+					 ><span
+					class="th1" id="th1"><i>0</i>/15字</span>
+
+
+			</div>
+
+			<!-- 时间 -->
+			<div class="pubdate">
+				<label for=""><span class="bitian">*</span>发生时间：&nbsp;</label> <input
+					type="datetime-local" id="edate" lay-verify="date" name="edate" >
+
+			</div>
+
+
+			<!-- 详细描述 -->
+			<div class="detail">
+				<label for="detail"><span class="bitian">*</span>详细描述：</label>
+				<div class="areabox">
+					<textarea class="text" id="detail" name="edetail"
+						 maxlength="128" placeholder="请输入详细描述"
+						 onkeyup="cal2();"></textarea>
+					<span class="th2" id="th2"><i>0</i>/128字</span>
+				</div>
+			</div>
+
+			<!-- 联系人信息 -->
+			<div class="contact">
+				<div class="persondiv">
+					<label for="contact"><span class="bitian">*</span>联系人：&nbsp;</label>
+					<select class="kinds" id="contact" name="contactPerson" >
+						<option value="管理员">本网站</option>
+						<option value="本人" selected="selected">我自己</option>
+					</select> <input type="text" class="text" id="contactName"
+						name="contactName" placeholder="请输入您的姓名">
+
+				</div>
+
+
+				<div class="teldiv">
+					<label for="tel">手机号：&nbsp;</label> <input type="text" class="text"
+						id="tel" name="tel" placeholder="电话号码" maxlength="13" />
+
+				</div>
+			</div>
+
+			<!-- 上传图片 -->
+			<div id="uploadimage">
+				<span id="imgSpan"> 上传物品图 </span> <input type="file" id="file"
+					name="img" class="filepath" onchange="changepic(this)"
+					accept="imagejpg,image/jpeg,image/png,image/PNG">
+				<!--当vaule值改变时执行changepic函数，规定上传的文件只能是图片-->
+				<div id="eimg">
+					<img src="" id="eimage" />
+				</div>
+			</div>
+
+
+			<div class="buttBox">
+				<button class="butt sub" id="pub" lay-submit="" onclick="pubInfo()">发布信息</button>
+				<input type="reset" class="butt sub" id="reset">
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="js/pubInfo.js"></script>
+	<script type="text/javascript">
+		
+	</script>
+</body>
+
+</html>

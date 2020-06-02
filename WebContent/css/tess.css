@@ -1,0 +1,106 @@
+.layui-body {
+    background-color: rgb(247, 247, 247);
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.content {
+    max-width: 1200px;
+    /* width: 1000px; */
+    height: 200px;
+    background-color: #ffffff;
+    margin: 10px auto 0px;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.img {
+    float: left;
+    max-width: 150px;
+}
+
+.img img {
+    max-width: 100%;
+    background-size: cover;
+}
+
+.artilecont {
+    margin-top: 10px;
+}
+
+.artile {
+    float: left;
+    width: 70%
+}
+
+.contfoot {
+    max-width: 100%;
+    clear: both;
+    padding-left: 20px;
+    position: relative;
+}
+
+.contfootleft {
+    float: left;
+}
+
+.contfootright {
+    position: absolute;
+    right: 150px;
+    color: #FFB800;
+}
+
+#tab1 {
+    width: 500px;
+    margin: 0 auto;
+}
+.contentnav{
+    max-width: 1200px;
+    /* background-color:#ccc; */
+    margin: 0 auto 20px;
+    /* margin: 0 auto; */
+}
+.contentnavbar{
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #ccc;
+}
+.contentnavbar li{
+    height: 40px;
+    min-width: 65px;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 0px 20px;
+    /* padding: 0px 15px; */
+    font-size: 20px;
+    /* font-size: 14px; */
+    display: inline-block;
+    cursor: pointer;
+}
+.navthis{
+    color: #FFB800;
+    /* background-color: #fff; */
+    position: relative;
+}
+.navthis::after{
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 40px;
+    left: 0px;
+    top: 0px;
+    border-bottom: 5px solid #FFB800;
+    /* border-bottom: 2px solid #FFB800; */
+}
+
+.i{
+    max-width: 100px;
+    height: 50px;
+    margin: 0 auto;
+}

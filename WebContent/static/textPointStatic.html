@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>canvas text</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+  </body>
+  <script>
+    function getTxtData(str) {
+      const c = document.createElement("canvas");
+      c.width = innerHeight;
+      c.height = innerWidth;
+      document.body.appendChild(c);
+      const t = c.getContext("2d");
+      t.fillStyle = "#f00";
+      t.font = "100px Georgia";
+      t.fillText(str, 0, 100);
+      const { data, width, height } = t.getImageData(
+        0,
+        0,
+        innerHeight,
+        innerWidth
+      );
+      const dots = [];
+      const gap = 6;
+      for (let w = 0; w < width; w += gap) {
+        for (let h = 0; h < height; h += gap) {
+          const index = (h * width + w) * 4;
+          if (data[index] == 255) {
+            dots.push({ x: w, y: h });
+          }
+        }
+      }
+      return dots;
+    }
+    const canvas = document.querySelector("#canvas");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#ff0";
+    const dots = getTxtData("你微信多少");
+    dots.forEach(({ x, y }) => {
+      ctx.beginPath();
+      ctx.arc(x, y, 2, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+  </script>
+</html>

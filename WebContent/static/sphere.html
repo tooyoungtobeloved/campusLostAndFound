@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>sphere with div</title>
+    <script type="text/javascript" src="../js/jquery-3.1.1.min.js"></script>
+    <script src="../bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+	href="../bootstrap-3.3.7-dist/css/bootstrap.min.css">
+    <script src="./lib/three.js"></script>
+    <script src="./lib/CSS3DRenderer.js"></script>
+    <script src="./lib/tween.js"></script>
+    <script src="./lib/orbitcontrol.js"></script>
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+      /*  background-color: #000000; */
+        margin: 0;
+        overflow: hidden;
+      }
+
+      #container {
+        text-align: center;
+        vertical-align: middle;
+        line-height: 70px;
+      } 
+      .element:hover {
+        border: 1px solid rgba(127, 255, 255, 0.75);
+        box-shadow: 0 0 12px rgba(0, 255, 255, 0.75);
+      }
+      /* .element:hover::after {
+        content: attr(txt);
+        display: block;
+        height: 80px;
+        background: rgba(255,255,0,0.5);
+        color: #fff;
+        border-radius: 8px;
+        width: 80px;
+        position :relative;
+        left: 10px;
+        bottom: 0px;
+        line-height: 20px;
+        transform: translateX(-20%);
+      } */
+    </style>
+  </head>
+  <body>
+  <!-- 详细公告模态框 -->
+	<div class="modal fade bs-example-modal-lg" id="noteModal"
+		tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header" id="beforeDetail">
+					<!--  <button type="button" class="close"  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+       <h4 class="modal-title" id="myModalLabel">公告详情</h4> -->
+				</div>
+				<div class="modal-body" id="showNote">
+					<!-- <h1 style="text-align: center;font-style: inherit;">这是标题</h1>
+      		<p style="line-height: 60px;text-indent:2em;font-size: 22px;">就是刚开始对女家的使女呢发布
+      		时间不擦技术不就是刚开始对女家</p>
+      		<span class="glyphicon glyphicon-time"></span>发布时间： -->
+				</div>
+				<!-- <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div> -->
+			</div>
+		</div>
+	</div>
+    <div id="container"></div>
+  </body>
+  <script>
+//显示感谢信
+function format(time){
+    var d = new Date(time);
+    var year = ''+d.getFullYear(); //获取年 
+    var month = ''+(d.getMonth()+1);//获取月  
+    var day = ''+d.getDate(); //获取当日
+    var hour = ''+d.getHours()//获取小时
+    var min = ''+d.getMinutes()//获取分钟
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+    if (hour.length < 2) hour = '0' + hour;
+    if (min.length < 2) min = '0' + min;
+    var result = year+"-"
+                 +month+"-"
+                 +day+" "
+                 +hour+":"
+                 +min;
+    return result;
+ }
+	function noteDetail(noteId){
+		$.ajax({
+			url : "../NoteDetail",
+			dataType : "json",
+			async : true,
+			type : "POST",
+			data:{
+				"noteId":noteId
+			},
+			success : function(result){
+				console.log("--------");
+				console.dir(result);
+				console.log("--------");
+				var html = "";
+				var title = "";
+				console.dir(result);
+				html = `<h1 style="text-align: center;font-style: inherit;">${result.thanks.tTitle}</h1>
+		      		<p style="line-height: 60px;text-indent:2em;font-size: 22px;">${result.thanks.tDetail}</p>
+		      		<span class="glyphicon glyphicon-time"></span>发布时间:${format(result.thanks.tDate)} `;
+				title=`<button type="button" class="close"  data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				       <h4 class="modal-title" id="myModalLabel">感谢信详情</h4>`;
+				$('#showNote').html(html);
+				$('#beforeDetail').html(title);
+			} 
+		});$('#noteModal').modal('show');
+	} 
+    function createSphereVertices(scene) {
+      const vector = new THREE.Vector3();
+
+      var thanks = new Array();
+	  	var thanks = new Array();
+	  	$.ajax({
+				url : "../Thanks",
+				dataType : "json",
+				async : false,
+				type : "POST",
+				success : function(result){
+					console.dir(result);
+					for(i=0;i<result.length;i++){
+						thanks[i] = result[i];
+					}
+				} 
+			});
+const count = thanks.length;
+
+      for (let i = 0; i < count; ++i) {
+        const element = document.createElement("a");
+        Object.assign(element.style, {
+          textDecoration: "none",
+          width: "70px",
+          height: "70px",
+          borderRadius: "50%",
+          textAlign:"center",
+          paddingTop:"24px",
+          
+          backgroundColor: `rgba(255, 255, ${Math.random() * 255 + 0.25}, ${Math.random() * 0.5 +
+            0.25} )`
+        });
+         element.setAttribute(
+          "txt",
+          `${thanks[i].tTitle}`
+        ); 
+        element.setAttribute(
+                "display",
+                `inline-block`
+              );
+        //display: inline-block;
+        //text-align: center;
+       // padding-top: 24px;
+        element.setAttribute(
+                "onclick",
+                `noteDetail(${thanks[i].tId})`
+              );
+        element.className = "element";
+        element.innerText = thanks[i].tTitle;
+        const object = new THREE.CSS3DObject(element);
+        const o = new THREE.Object3D();
+
+        const phi = Math.acos(-1 + (2 * i) / count);
+        const theta = Math.sqrt(count * Math.PI) * phi;
+        Object.assign(object.position, {
+          x: 0,
+          y: 0,
+          z: 0
+        });
+
+        const SIZE = 800;
+
+        new TWEEN.Tween(object.position)
+          .delay(1500)
+          .to({
+            x: SIZE * Math.cos(theta) * Math.sin(phi),
+            y: SIZE * Math.sin(theta) * Math.sin(phi),
+            z: -SIZE * Math.cos(phi)
+          })
+          .start();
+        // new TWEEN.Tween(object.scale)
+        //   .delay(1500)
+        //   .to({
+        //     x: 10,
+        //     y: 10
+        //   })
+        //   .start();
+
+        // vector.copy(object.position).multiplyScalar(2);
+        // object.lookAt(vector);
+        o.add(object);
+        scene.add(o);
+      }
+    }
+
+    function tranform() {
+      new TWEEN.Tween(object.position)
+        .delay((i + 1) * 1500)
+        .to({ x: -100000 })
+        .start();
+    }
+    function init() {
+      const felidView = 40;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const aspect = width / height;
+      const nearPlane = 1;
+      // const control = new THREE.TrackballControls();
+      const farPlane = 10000;
+      const WebGLoutput = document.getElementById("container");
+
+      const scene = new THREE.Scene();
+
+      const camera = new THREE.PerspectiveCamera(
+        felidView,
+        aspect,
+        nearPlane,
+        farPlane
+      );
+      camera.position.z = 2000;
+
+      const renderer = new THREE.CSS3DRenderer();
+      renderer.setSize(width, height);
+      renderer.domElement.style.position = "absolute";
+      document.body.appendChild(renderer.domElement);
+      window.s = scene;
+      window.r = () => {
+        renderer.render(scene, camera);
+        TWEEN.update();
+        requestAnimationFrame(window.r);
+      };
+      window.r();
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.addEventListener("change", () => {
+        renderer.render(scene, camera);
+      });
+      controls.minDistance = 1;
+      // controls.maxDistance = 200;
+      controls.maxDistance = 10000;
+      controls.enablePan = false;
+
+      createSphereVertices(scene);
+    }
+    init();
+  </script>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>角色列表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../css/okadmin.css">
+    <style>
+        .layui-table-page{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="ok-body">
+    <!--面包屑导航区域-->
+    <div class="ok-body-breadcrumb">
+        <span class="layui-breadcrumb">
+            <a><cite>首页</cite></a>
+            <a><cite>会员管理</cite></a>
+            <a><cite>角色列表</cite></a>
+        </span>
+        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon layui-icon-refresh"></i>
+        </a>
+    </div>
+    <!--模糊搜索区域-->
+    <!-- <div class="layui-row">
+        <form class="layui-form layui-col-md12 ok-search">
+            <input class="layui-input" placeholder="开始日期" autocomplete="off" id="startTime" name="startTime">
+            <input class="layui-input" placeholder="截止日期" autocomplete="off" id="endTime" name="endTime">
+            <input class="layui-input" placeholder="请输入角色名" autocomplete="off" name="name">
+            <button class="layui-btn" lay-submit="" lay-filter="search">
+                <i class="layui-icon layui-icon-search"></i>
+            </button>
+        </form>
+    </div> -->
+    <!--数据表格-->
+    <table class="layui-hide" id="tableId" lay-filter="tableFilter"></table>
+</div>
+<!--js逻辑-->
+<script src="../../lib/layui/layui.js"></script>
+<script>
+    layui.use(["element", "table", "form", "laydate", "okLayer", "okUtils"], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var laydate = layui.laydate;
+		var okLayer = layui.okLayer;
+        var okUtils = layui.okUtils;
+        var $ = layui.$;
+        laydate.render({elem: "#startTime", type: "datetime"});
+        laydate.render({elem: "#endTime", type: "datetime"});
+
+        var roleTable = table.render({
+            elem: "#tableId",
+            url: "/lostandfound/ADMIN?method=get",
+            limit: 10,
+            page: true,
+            // toolbar: "#toolbarTpl",
+            cellMinWidth:100,
+            cols: [[
+                {type: "checkbox"},
+                {field: "stuId", title: "ID", sort: true},
+                {field: "uName", title: "角色名",align:"center"},
+                {field: "uDesc", title: "备注",align:"center"},
+                // {field: "createUser", title: "创建者"},
+                {field: "isAdmin", title: "状态",align:"center",templet:"#status"},
+                {title: "操作", width: 200, align: "center", templet: "#operationTpl"}
+            ]],
+            done: function (res, curr, count) {
+                console.log(res, curr, count);
+            },
+            parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+                    // console.log(res)
+                    return {
+                        "code": res.code, //解析接口状态
+                        //"msg": res.message, //解析提示文本
+                        "count": res.total, //解析数据长度
+                        "data": res.result //解析数据列表
+                        // res:res.result,
+
+                    }
+                }
+        });
+
+    //     form.on("submit(search)", function () {
+    //         roleTable.reload({
+    //             where: data.field,
+    //             page: {curr: 1}
+    //         });
+    //         return false;
+    //     });
+
+	// 	table.on("toolbar(tableFilter)", function (obj) {
+	// 		switch (obj.event) {
+	// 			case "add":
+	// 				add();
+	// 				break;
+	// 			case "batchDel":
+	// 				batchDel();
+	// 				break;
+	// 		}
+    //     });
+
+        table.on("tool(tableFilter)", function (obj) {
+            var data = obj.data;
+			switch (obj.event) {
+				case "edit":
+					edit(data.id);
+					break;
+				case "del":
+					del(data.id);
+					break;
+			}
+        });
+
+	// 	function add () {
+	// 		okLayer.open("添加角色", "role-add.html", "90%", "90%", null, function () {
+    //             roleTable.reload();
+	// 		})
+	// 	}
+
+	// 	function batchDel () {
+	// 		okLayer.confirm("确定要批量删除吗？", function (index) {
+	// 		    layer.close(index);
+	// 		    var idsStr = okUtils.table.batchCheck(table);
+	// 		    if (idsStr) {
+	// 		        okUtils.ajax("/role/batchDel", "post", {idsStr: idsStr}).done(function (response) {
+	// 		            console.log(response)
+	// 		            okUtils.table.successMsg("批量删除成功");
+	// 		        }).fail(function (error) {
+	// 		            console.log(error)
+	// 		        });
+	// 		    }
+	// 		});
+	// 	}
+
+	// 	function edit (id) {
+	// 		okLayer.open("编辑角色", "role-edit.html?id=" + id, "90%", "90%", null, function () {
+    //             roleTable.reload();
+	// 		})
+	// 	}
+
+		function del (id) {
+			okLayer.confirm("确定要删除吗？", function () {
+			    okUtils.ajax("/user/batchDel", "post", {idsStr: id}).done(function (response) {
+			        console.log(response)
+			        okUtils.table.successMsg("删除成功");
+			    }).fail(function (error) {
+			        console.log(error)
+			    });
+			})
+        }
+        form.on('switch(setADMIN)', function (data) {
+                var checkd = data.elem.checked
+                if(checkd){
+                    $.ajax({
+                        type: "get",
+                        url: "/lostandfound/ADMIN",
+                        data: {"method":"set","stuId":data.elem.name,"type":1},
+                        dataType: "html",
+                        success: function (response) {
+                            if(response == "success"){
+                                okUtils.table.successMsg("设置成功");
+                                data.elem.disabled = "disabled"
+                                table.reload('tableId', {
+                                    url: '/lostandfound/ADMIN?method=get'
+                                    , where: {} //设定异步数据接口的额外参数
+                                    //,height: 300
+                                });
+                            }
+                        }
+                    });
+                }else{
+                    $.ajax({
+                        type: "get",
+                        url: "/lostandfound/ADMIN",
+                        data: {"method":"set","stuId":data.elem.name,"type":0},
+                        dataType: "html",
+                        success: function (response) {
+                            if(response == "success"){
+                                okUtils.table.successMsg("设置成功");
+                                data.elem.disabled = "disabled"
+                                table.reload('tableId', {
+                                    url: '/lostandfound/ADMIN?method=get'
+                                    , where: {} //设定异步数据接口的额外参数
+                                    //,height: 300
+                                });
+                            }
+                        }
+                    });
+                }
+
+            });
+    })
+</script>
+<!-- 头工具栏模板 -->
+<script type="text/html" id="status">
+    {{#  if(d.isAdmin == 1){ }}
+        <input type="checkbox" name="{{d.stuId}}" lay-skin="switch" lay-filter="setADMIN" lay-text="管理员|普通" checked>
+    {{#  } else if(d.isAdmin == 0) { }}
+        <input type="checkbox" name="{{d.stuId}}" lay-skin="switch" lay-filter="setADMIN" lay-text="管理员|普通">
+    {{#  } }}
+</script> 
+<script type="text/html" id="operationTpl">
+    <!-- <a href="javascript:;" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a> -->
+    <a href="javascript:;" title="删除" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
+</script>
+</body>
+</html>

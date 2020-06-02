@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>css3d</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        background-color: #000000;
+        margin: 0;
+        font-family: Helvetica, sans-serif;
+        overflow: hidden;
+      }
+
+      /* canvas {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: linear-gradient(#e4e0ba, #f7d9aa);
+      } */
+      .element {
+        width: 120px;
+        height: 160px;
+        cursor: default;
+        text-align: center;
+        /* border: 1px solid rgba(127, 255, 255, 0.25); */
+        box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+      }
+
+      .element:hover {
+        border: 1px solid rgba(127, 255, 255, 0.75);
+        box-shadow: 0 0 12px rgba(0, 255, 255, 0.75);
+      }
+
+      .element .number {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 12px;
+        color: rgba(127, 255, 255, 0.75);
+      }
+
+      .element .symbol {
+        position: absolute;
+        top: 40px;
+        left: 0px;
+        right: 0;
+        font-size: 60px;
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.75);
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
+      }
+
+      .element .detail {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 15px;
+        font-size: 12px;
+        color: rgba(127, 255, 255, 0.75);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <!-- <div class="element">
+        <div class="number">1</div>
+        <div class="symbol">H</div>
+        <div class="detail">Hydrogen<br />1.00794</div>
+      </div> -->
+    </div>
+  </body>
+  <!-- 3d图形库 -->
+  <script src="./lib/three.js"></script>
+  <script src="./lib/orbitcontrol.js"></script>
+  <!-- 轨迹球控制器库 -->
+  <!-- <script src="./jsm/TrackballControls.js"></script> -->
+  <!-- css3D渲染器 -->
+  <script src="./lib/CSS3DRenderer.js"></script>
+  <script src="./lib/tween.js"></script>
+  <script>
+    function getTxtData(str) {
+      const c = document.createElement("canvas");
+      c.width = innerWidth;
+      c.height = innerHeight;
+      // document.body.appendChild(c);
+      const t = c.getContext("2d");
+      t.fillStyle = "#f00";
+      t.font = "100px Georgia";
+      t.fillText(str, 0, innerHeight / 4);
+      const { data, width, height } = t.getImageData(
+        0,
+        0,
+        innerHeight,
+        innerWidth
+      );
+      const dots = [];
+      const gap = 3; // 越大，点间隔也越大；越小点间隔越密但性能差
+      for (let w = 0; w < width; w += gap) {
+        for (let h = 0; h < height; h += gap) {
+          const index = (h * width + w) * 4;
+          if (data[index] == 255) {
+            dots.push({
+              x: w * 3 - innerWidth / 2,
+              y: -h * 3 + innerHeight / 2
+            });
+          }
+        }
+      }
+      return dots;
+    }
+
+    function down(x) {
+      return Array(100).fill({ x, y: -800 });
+    }
+
+    function createSphereVertices(tw, tw1) {
+      const vector = new THREE.Vector3();
+      const res = [];
+      for (let i = 0; i < 50; ++i) {
+        const phi = Math.acos(-1 + (2 * i) / 100);
+        const theta = Math.sqrt(100 * Math.PI) * phi;
+        const x = 500 * Math.cos(theta) * Math.sin(phi);
+        const y = 500 * Math.sin(theta) * Math.sin(phi);
+        const z = -500 * Math.cos(phi);
+
+        // const object = new THREE.Object3D();
+
+        // object.position.x = 800 * Math.cos(theta) * Math.sin(phi);
+        // object.position.y = 800 * Math.sin(theta) * Math.sin(phi);
+        // object.position.z = -800 * Math.cos(phi);
+
+        // // rotation object
+
+        // vector.copy(object.position).multiplyScalar(2);
+        // object.lookAt(vector);
+        res.push({
+          x,
+          y,
+          z,
+          tw,
+          tw1
+        });
+      }
+      res.dropWhenNothingToMatch = true;
+      return res;
+    }
+
+    function next(object, tar) {
+      if (tar) {
+        new TWEEN.Tween(object.position)
+          .delay(1000)
+          .to({ x: tar.x, y: tar.y }, 1000)
+          .start();
+      }
+    }
+
+    function createLookup({ x, y, z, hidden } = {}, tars, index) {}
+
+    function createO({ x, y, z, hidden } = {}, tars, index) {
+      const vector = new THREE.Vector3();
+      // htmlElement
+      const element = document.createElement("div");
+      element.className = "element";
+      element.style.width = "4px";
+      element.style.height = "4px";
+      element.style.borderRadius = "50%";
+      element.style.backgroundColor = `rgba( 0, ${Math.random() * 255 +
+        0.25}, ${Math.random() * 255 + 0.25}, ${Math.random() * 0.5 + 0.25} )`;
+      const o = new THREE.Object3D();
+      const object = new THREE.CSS3DObject(element);
+
+      // threejs api
+      object.position.x = x;
+      object.position.y = y;
+      object.position.z = z || 0;
+      if (hidden) {
+        object.position.x = -10000;
+      }
+      // object.rotation.x = 1;
+
+      tars.reduce((tweens, tar, i) => {
+        if (typeof tar === "function") {
+          return tweens.chain(new TWEEN.Tween(object.position).start());
+        }
+        if (tar[index]) {
+          const { tw = {}, tw1 } = tar[index];
+          const newRet = tweens.chain(
+            new TWEEN.Tween(object[tw.target] || object.position)
+              .easing(TWEEN.Easing.Bounce.InOut)
+              .delay(tw.delay || (i + 1) * 1500)
+              .to(
+                tw.to || {
+                  x: tar[index].x,
+                  y: tar[index].y,
+                  z: tar[index].z || 0
+                },
+                1000
+              )
+              .start()
+          );
+          if (tw.addon) {
+            let retTwaddon = tweens
+              .chain(
+                new TWEEN.Tween(object.position)
+                  .delay((i + 1) * 1500)
+                  .to(
+                    {
+                      x: tar[index].x - (i === tars.length - 1 ? 450 : 0),
+                      y: tar[index].y,
+                      z: tar[index].z || 0
+                    },
+                    1000
+                  )
+                  .start()
+              )
+              .chain(newRet);
+            if (tw1) {
+              retTwaddon = retTwaddon.chain(
+                new TWEEN.Tween(object[tw1.target] || object.position)
+                  .delay(tw1.delay || (i + 1) * 1500)
+                  .to(
+                    tw1.to || {
+                      x: tar[index].x - (i === tars.length - 1 ? 450 : 0),
+                      y: tar[index].y,
+                      z: tar[index].z || 0
+                    },
+                    2000
+                  )
+                  .start()
+              );
+            }
+            return retTwaddon;
+          }
+          return newRet;
+        }
+        // if (tar.dropWhenNothingToMatch) {
+        //   o.remove(object);
+        // }
+        return tweens.chain(
+          new TWEEN.Tween(object.position)
+            .delay((i + 1) * 1500)
+            .to({ x: -100000 })
+            .start()
+        );
+      }, new TWEEN.Tween());
+
+      // next(object, tar);
+      vector.copy(object.position).multiplyScalar(1);
+      object.lookAt(vector);
+
+      o.add(object);
+      // return o;
+      return object;
+    }
+    function init() {
+      const felidView = 40;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const aspect = width / height;
+      const nearPlane = 1;
+      const farPlane = 10000;
+      const WebGLoutput = document.getElementById("container");
+
+      const scene = new THREE.Scene();
+
+      const camera = new THREE.PerspectiveCamera(
+        felidView,
+        aspect,
+        nearPlane,
+        farPlane
+      );
+      camera.position.z = 2000;
+
+      const renderer = new THREE.CSS3DRenderer();
+
+      renderer.setSize(width, height);
+      renderer.domElement.style.position = "absolute";
+      document.body.appendChild(renderer.domElement);
+      const objects = [];
+      const targets = {
+        grid: [],
+        helix: [],
+        table: [],
+        sphere: []
+      };
+
+      const controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.addEventListener("change", () => {
+        renderer.render(scene, camera);
+      });
+      controls.minDistance = 1;
+      // controls.maxDistance = 200;
+      controls.maxDistance = 10000;
+      controls.enablePan = false;
+
+      const dots = getTxtData("I saw");
+      const nexts = ["I come", "I will conquer"].map(getTxtData);
+      // const last = getTxtData("asdf");
+      const max = Math.max(
+        ...nexts.map(n => n.length),
+        dots.length
+        // last.length
+      );
+      Array.apply(null, { length: max })
+        .map((_, idx) => dots[idx] || { x: -10000, y: 0, hidden: true })
+        .forEach(({ x, y }, i) => {
+          scene.add(
+            createO(
+              {
+                x,
+                y,
+                z: 1
+              },
+              // nexts,
+              [
+                ...nexts,
+                createSphereVertices(
+                  {
+                    target: "scale",
+                    to: { x: 5, y: 5 },
+                    addon: true
+                  },
+                  {
+                    target: "position",
+                    to: { y: -1000 },
+                    delay: Math.random() * 2500 + 6000
+                    // addon: true
+                  }
+                )
+                // ({ x }) => down(x),
+                // last
+              ],
+              i
+            )
+          );
+        });
+
+      window.s = scene;
+      window.r = () => {
+        renderer.render(scene, camera);
+        TWEEN.update();
+        requestAnimationFrame(window.r);
+      };
+      window.r();
+    }
+    console.time("a");
+    window.onload = init;
+    // createTableVertices();
+    function createTableVertices() {
+      let i = 0;
+      const res = [];
+
+      for (; i < 100; i += 5) {
+        const object = new THREE.Object3D();
+
+        // [ clumn 18 ]
+        object.position.x = i * 140 - 1260;
+        object.position.y = -i * 180 + 1000;
+        object.position.z = 0;
+
+        res.push({
+          x: object.position.x,
+          y: object.position.y,
+          z: object.position.z
+        });
+        // targets.table.push(object);
+      }
+      return res;
+    }
+  </script>
+</html>
